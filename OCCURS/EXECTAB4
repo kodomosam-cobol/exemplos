@@ -1,0 +1,10 @@
+//GPAR57EX JOB 'BUCHOLCAS',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)  00010018
+//EXECUTAR EXEC PGM=AR57TAB4                                            00020018
+//STEPLIB  DD DSN=GR.GERAL.LOADLIB,DISP=SHR                             00030010
+//SYSIN DD *                                                            00031011
+06-123456700                                                            00034019
+07-125874600                                                            00090019
+08-452896300                                                            00100019
+09-125425600                                                            00110019
+10-245878900                                                            00120019
+000000000000                                                            00130019

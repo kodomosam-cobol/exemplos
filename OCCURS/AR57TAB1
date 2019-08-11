@@ -1,0 +1,116 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57TAB1.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      * PROGRAMA PARA EXIBIR TOTAIS DE VENDAS                        *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77   TOTAL-01                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-02                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-03                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-04                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-05                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-06                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-07                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-08                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-09                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-10                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-11                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-12                  PIC 9(8)V99  VALUE ZEROS.
+       77   TOTAL-ANUAL               PIC 9(9)V99  VALUE ZEROS.
+       77   TOTAL-EDIT                PIC ZZ.ZZZ.ZZ9,99 VALUE ZEROS.
+       77   TOTAL-ANUAL-EDIT          PIC ZZ.ZZZ.ZZ9,99 VALUE ZEROS.
+       01   VENDAS-ACCEPT.
+            02 MES-ACCEPT             PIC 99       VALUE 0.
+            02 VALOR-ACCEPT           PIC 9(7)V99  VALUE 0.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+           ACCEPT VENDAS-ACCEPT FROM SYSIN.
+           PERFORM SOMAR UNTIL MES-ACCEPT = 0.
+                MOVE TOTAL-01 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 01 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-01 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-02 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 02 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-02 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-03 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 03 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-03 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-04 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 04 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-04 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-05 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 05 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-05 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-06 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 06 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-06 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-07 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 07 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-07 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-08 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 08 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-08 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-09 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 09 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-09 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-10 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 10 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-10 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-11 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 11 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-11 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-12 TO TOTAL-EDIT.
+                DISPLAY 'VENDAS DO MES ' 12 ' = ' TOTAL-EDIT.
+                ADD  TOTAL-12 TO TOTAL-ANUAL.
+                DISPLAY '---------------------------------'.
+                MOVE TOTAL-ANUAL TO TOTAL-ANUAL-EDIT.
+                DISPLAY 'TOTAL ANUAL = '  TOTAL-ANUAL-EDIT.
+                STOP RUN.
+          SOMAR.
+                EVALUATE MES-ACCEPT
+                    WHEN 1
+                         ADD VALOR-ACCEPT TO TOTAL-01
+                    WHEN 2
+                         ADD VALOR-ACCEPT TO TOTAL-02
+                    WHEN 3
+                         ADD VALOR-ACCEPT TO TOTAL-03
+                    WHEN 4
+                         ADD VALOR-ACCEPT TO TOTAL-04
+                    WHEN 5
+                         ADD VALOR-ACCEPT TO TOTAL-05
+                    WHEN 6
+                         ADD VALOR-ACCEPT TO TOTAL-06
+                    WHEN 7
+                         ADD VALOR-ACCEPT TO TOTAL-07
+                    WHEN 8
+                         ADD VALOR-ACCEPT TO TOTAL-08
+                    WHEN 9
+                         ADD VALOR-ACCEPT TO TOTAL-09
+                    WHEN 10
+                         ADD VALOR-ACCEPT TO TOTAL-10
+                    WHEN 11
+                         ADD VALOR-ACCEPT TO TOTAL-11
+                    WHEN 12
+                         ADD VALOR-ACCEPT TO TOTAL-12
+           END-EVALUATE.
+           ACCEPT VENDAS-ACCEPT FROM SYSIN.

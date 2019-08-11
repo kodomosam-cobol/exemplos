@@ -1,0 +1,40 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57SOMA.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *PROGRAMA PARA EXIBICAO DAS OPERACOES ARITMETICAS              *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77 VAR1                     PIC 99V9    VALUE 0.
+       77 VAR2                     PIC 99V9    VALUE 0.
+       77 VAR3                     PIC 99V9    VALUE 0.
+       77 VAR4                     PIC 99V9    VALUE 0.
+       77 VAR1-EDIT                PIC Z9,9    VALUE ZEROS.
+       77 VAR2-EDIT                PIC Z9,9    VALUE ZEROS.
+       77 VAR3-EDIT                PIC Z9,9    VALUE ZEROS.
+       77 VAR4-EDIT                PIC Z9,9    VALUE ZEROS.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+      *              EXEMPLO DE ADICAO COM TO
+           MOVE 2,3  TO VAR1.
+           MOVE 3,8  TO VAR2.
+           MOVE VAR2 TO VAR4.
+           ADD  VAR1 TO VAR2 ROUNDED
+               ON SIZE ERROR
+                   DISPLAY 'OVERFLOW'
+               NOT ON SIZE ERROR
+                   MOVE VAR2 TO VAR2-EDIT
+                   MOVE VAR1 TO VAR1-EDIT
+                   MOVE VAR4 TO VAR4-EDIT
+                   DISPLAY 'A SOMA DE ' VAR1-EDIT ' COM ' VAR4-EDIT
+                   ' EM ' VAR2-EDIT
+           END-ADD.
+           STOP RUN.

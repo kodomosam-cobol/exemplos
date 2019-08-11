@@ -1,0 +1,157 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57REPO.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *EXERCICIO 11 DA APOSTILA PAG 13 DO CADERNO DE EXERCICIOS      *
+      *PROGRAMA P LER ARQUIVO DE ESTOQUE E GRAVAR ARQUIVO REPOSICAO*
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+      ****************************************************************
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *SESSAO PARA DECLARAR ARQUIVOS
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT ESTOQUE ASSIGN TO ESTOQUE
+              FILE STATUS IS  STATUS-ESTOQUE.
+           SELECT REPOSICAO ASSIGN TO REPOSICA
+              FILE STATUS IS STATUS-REPOSICAO.
+      ****************************************************************
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+      ****************************************************************
+       DATA DIVISION.
+       FILE SECTION.
+       FD  ESTOQUE.
+       01  REG-ESTOQUE.
+           02 CODPROD-E              PIC 9(04).
+           02 DESCRICAO-E            PIC X(25).
+           02 QTDEST-E               PIC 9(03).
+           02 QTDMIN-E               PIC 9(03).
+           02 QTDMAX-E               PIC 9(03).
+           02 PRECO-E                PIC 9(04)V99.
+           02 FILLER                 PIC X(6).
+       FD REPOSICAO.
+       01 REG-REPOSICAO.
+           02 CODPROD-S              PIC 9(4).
+           02 QTDEST-S               PIC 9(3).
+           02 QTDMAX-S               PIC 9(3).
+           02 QTDREP-S               PIC 9(3).
+           02 PRECO-S                PIC 9(4)V99.
+           02 FILLER                 PIC X(06).
+      * SEMPRE QUANDO TRABALHARMOS COM ARQUIVOS TEMOS QUE DECLARAR
+      *OS CAMPOS NESTA SECTION
+      ****************************************************************
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77    STATUS-ESTOQUE     PIC X(02)       VALUE SPACES.
+       77    STATUS-REPOSICAO   PIC X(02)       VALUE SPACES.
+       77    TOT-LIDOS          PIC 9(03)       VALUE ZEROS.
+       77    TOT-GRAVADOS       PIC 9(03)       VALUE ZEROS.
+      **********************************************************
+       PROCEDURE DIVISION.
+      *PADROES ADOTADOS NO MERCADO
+       000-PRINCIPAL SECTION.
+       001-PRINCIPAL.
+           PERFORM 100-INICIAR.
+           PERFORM 201-PROCESSAR UNTIL STATUS-ESTOQUE = '10'.
+           PERFORM 900-FINALIZAR.
+           PERFORM 300-LER-ESTOQUE.
+           STOP RUN.
+       099-FIM-PRINCIPAL.
+           EXIT.
+      ***********************************************************
+      * SEMPRE USADO CODIGO STATUS 35
+      * STATUS: OPEN, FILE NOT PRESENT
+      ***********************************************************
+       100-INICIAR SECTION.
+       101-INICIAR.
+           OPEN INPUT ESTOQUE.
+           EVALUATE STATUS-ESTOQUE
+              WHEN '00'
+                  CONTINUE
+              WHEN '35'
+                  DISPLAY 'ARQUIVO DO ESTOQUE NAO ENCONTRADO '
+                  MOVE 8 TO RETURN-CODE
+                  STOP RUN
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-ESTOQUE 'NO COMANDO OPEN '
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+              END-EVALUATE.
+      ***********************************************************
+           OPEN OUTPUT REPOSICAO.
+           EVALUATE STATUS-REPOSICAO
+              WHEN '00'
+                  CONTINUE
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-REPOSICAO
+                          ' NO COMANDO OPEN DO REPOSICAO'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+              END-EVALUATE.
+              PERFORM 300-LER-ESTOQUE.
+       199-FIM-INICIAR.
+           EXIT.
+      ************************************************************
+      *   MODULO PROCESSAR
+       200-PROCESSAR SECTION.
+       201-PROCESSAR.
+           IF QTDEST-E < QTDMIN-E
+               PERFORM 202-GRAVAR-REPOSICAO
+           END-IF.
+           PERFORM 300-LER-ESTOQUE.
+       202-GRAVAR-REPOSICAO.
+           MOVE CODPROD-E            TO CODPROD-S.
+           MOVE QTDEST-E             TO QTDEST-S.
+           MOVE QTDMAX-E             TO QTDMAX-S.
+           MOVE PRECO-E              TO PRECO-S.
+           SUBTRACT QTDEST-E FROM QTDMAX-E GIVING QTDREP-S.
+           WRITE REG-REPOSICAO.
+           EVALUATE STATUS-REPOSICAO
+              WHEN '00'
+                  ADD 1 TO TOT-GRAVADOS
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-REPOSICAO
+                          ' NO COMANDO WRITE DO REPOSICAO'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       299-FIM-PROCESSAR.
+           EXIT.
+      **************************************************************
+      * MODULO LER-ESTOQUE
+       300-LER-ESTOQUE SECTION.
+       301-LER-ESTOQUE.
+           READ ESTOQUE.
+           EVALUATE STATUS-ESTOQUE
+              WHEN '00'
+                  ADD 1 TO TOT-LIDOS
+              WHEN '10'
+                  CONTINUE
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-ESTOQUE
+                          ' NO COMANDO READ DO ESTOQUE'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       399-FIM-LER-ESTOQUE.
+           EXIT.
+      **************************************************************
+      * MODULO FINALIZAR
+      **************************************************************
+       900-FINALIZAR SECTION.
+       901-FINALIZAR.
+           CLOSE ESTOQUE.
+           CLOSE REPOSICAO.
+           IF STATUS-REPOSICAO NOT = '00'
+              DISPLAY 'ERRO ' STATUS-REPOSICAO ' NO CLOSE DO REPOSICAO'
+              DISPLAY 'POSIVEL PERDA DE DADOS'
+              MOVE 4 TO RETURN-CODE
+           END-IF.
+           DISPLAY 'TOTAIS DO PROCESSAMENTO'.
+           DISPLAY ' '.
+           DISPLAY 'TOTAL DE REGISTROS LIDOS ....:' TOT-LIDOS
+           DISPLAY 'TOTAL DE REGISTROS GRAVADOS..:' TOT-GRAVADOS.
+           DISPLAY ' '.
+           DISPLAY '------------ FINAL DE EXECUCAO----------------'.

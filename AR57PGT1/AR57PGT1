@@ -1,0 +1,58 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57PGT1.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *PROGRAMA PARA PAGAR UMA DIVIDA                                *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+      ****************************************************************
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77    DIVIDA             PIC 9(6)V99     VALUE 0.
+       77    TAXA               PIC 99V99       VALUE 0.
+       77    MESES              PIC 9(3)        VALUE 0.
+       77    PARCELA            PIC 9(4)V99     VALUE ZEROS.
+       77    DIVIDA-EDIT        PIC ZZZ.ZZ9,99  VALUE ZEROS.
+       77    JURO               PIC 9(3)V99     VALUE 0.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+      **********************************************************
+      *     MODULO INICIO                                      *
+      **********************************************************
+           ACCEPT DIVIDA.
+           ACCEPT TAXA.
+           ACCEPT PARCELA.
+           COMPUTE  JURO ROUNDED = DIVIDA * TAXA / 100
+             ON SIZE ERROR
+             DISPLAY 'OVERFLOW NO CAMPO JURO '
+             STOP RUN
+           END-COMPUTE.
+           IF PARCELA > JURO
+                CONTINUE
+           ELSE
+                DISPLAY 'PARCELA INSULFICIENTE PARA PAGAR DIVIDA '
+                STOP RUN
+           END-IF.
+           PERFORM CALCULO VARYING MESES FROM 1 BY 1
+              UNTIL DIVIDA = 0.
+           DISPLAY 'A DIVIDA FOI PAGA EM ' MESES ' MESES '.
+           STOP RUN.
+
+      *************************************************************
+      * MODULO DE CALCULO
+      *************************************************************
+       CALCULO.
+           COMPUTE JURO ROUNDED = DIVIDA * TAXA / 100.
+           ADD JURO TO DIVIDA.
+           IF DIVIDA < PARCELA
+               MOVE DIVIDA TO PARCELA
+           END-IF.
+           SUBTRACT PARCELA FROM DIVIDA.
+           MOVE DIVIDA TO DIVIDA-EDIT.
+           DISPLAY 'A DIVIDA APOS ' MESES 'MESES= ' DIVIDA-EDIT.        DIT.

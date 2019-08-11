@@ -1,0 +1,17 @@
+//GPAR57CD JOB 'RODRIGO',MSGCLASS=X,CLASS=C,NOTIFY=GPAR57,TIME=(0,5)    00010005
+//*-------------------------------------------------------------------* 00020000
+//*      JOB DE COMPILACAO DE PROGRAMA COBOL BATCH COM DB2            * 00030000
+//*      NAME='XXXXXXXX'   = NOME DO SEU PROGRAMA                       00040000
+//*      INSTR='XXXXXX'    = USUARIO                                    00050000
+//*      MEM(XXXXXXXX)     = NOME DO SEU PROGRAMA                       00060000
+//*      PLAN(XXXXXXXX)    = NOME DO SEU PROGRAMA                       00070000
+//*-------------------------------------------------------------------* 00080000
+// JCLLIB ORDER=GR.GERAL.PROCLIB                                        00090000
+//COMPDB2B EXEC DFHCODB2,NAME='AR57ADB2',INSTR='GPAR57'                 00100006
+//LKED.SYSIN    DD   *                                                  00130000
+  NAME AR57ADB2(R)                                                      00140006
+//BIND.SYSTSIN  DD *                                                    00160000
+DSN  SYSTEM(DB8G)                                                       00170000
+BIND PLAN(AR57ADB2) MEM(AR57ADB2) ACT(REP) ISOLATION(CS)  -             00180006
+     LIB('DSN810.DBRMLIB.DATA')                                         00190000
+END                                                                     00200000

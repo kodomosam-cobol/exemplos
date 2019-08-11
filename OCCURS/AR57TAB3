@@ -1,0 +1,75 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57TAB3.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *   PROGRAMA PARA EXIBIR TOTAIS DE VENDAS POR ESTADO(2),        *
+      *POR PRODUTO(3) E POR MES(4)
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       01   TOTAIS.
+            02 TOTAL-ESTADOS          OCCURS 2 TIMES.
+               03 TOTAL-PRODUTOS      OCCURS 3 TIMES.
+                  04 TOTAL-MES        OCCURS 4 TIMES.
+                     05 TOTAL-VALOR   PIC 9(8)V99.
+       77   TOTAL-ANUAL               PIC 9(9)V99  VALUE ZEROS.
+       77   TOTAL-EDIT                PIC ZZ.ZZZ.ZZ9,99 VALUE ZEROS.
+       77   TOTAL-ANUAL-EDIT          PIC ZZ.ZZZ.ZZ9,99 VALUE ZEROS.
+       01   VENDAS-ACCEPT.
+            02 ESTADO-ACCEPT          PIC 9          VALUE 0.
+            02 PRODUTO-ACCEPT         PIC 9          VALUE 0.
+            02 MES-ACCEPT             PIC 9          VALUE 0.
+            02 VALOR-ACCEPT           PIC 9(7)V99    VALUE 0.
+       01   NOME-MESES.
+            02 FILLER             PIC X(9)   VALUE 'JANEIRO'.
+            02 FILLER             PIC X(9)   VALUE 'FEVEREIRO'.
+            02 FILLER             PIC X(9)   VALUE 'MARCO'.
+            02 FILLER             PIC X(9)   VALUE 'ABRIL'.
+       01   NOMES      REDEFINES NOME-MESES.
+            02 NOME-MES           PIC X(09)   OCCURS 4 TIMES.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+           INITIALIZE TOTAIS.
+      **********************************************************
+           ACCEPT VENDAS-ACCEPT FROM SYSIN.
+           PERFORM SOMAR UNTIL ESTADO-ACCEPT = 0.
+           PERFORM VARYING ESTADO-ACCEPT  FROM 1 BY 1
+                           UNTIL ESTADO-ACCEPT = 3
+                PERFORM VARYING PRODUTO-ACCEPT FROM 1 BY 1
+                           UNTIL PRODUTO-ACCEPT = 4
+                       PERFORM VARYING MES-ACCEPT     FROM 1 BY 1
+                           UNTIL MES-ACCEPT = 5
+                MOVE TOTAL-VALOR(ESTADO-ACCEPT,
+                                 PRODUTO-ACCEPT,
+                                 MES-ACCEPT)
+                                 TO TOTAL-EDIT
+                ADD  TOTAL-VALOR(ESTADO-ACCEPT,
+                                 PRODUTO-ACCEPT,
+                                 MES-ACCEPT)
+                                 TO TOTAL-ANUAL
+                DISPLAY 'VENDAS NO ESTADO ' ESTADO-ACCEPT
+                     ' , DO PRODUTO '       PRODUTO-ACCEPT
+                     ' , DO MES     ' NOME-MES(MES-ACCEPT)
+                        ' = '               TOTAL-EDIT
+                       END-PERFORM
+                END-PERFORM
+           END-PERFORM.
+           MOVE TOTAL-ANUAL   TO TOTAL-ANUAL-EDIT.
+           DISPLAY '----------------------------------'.
+           DISPLAY 'TOTAL-ANUAL = ' TOTAL-ANUAL-EDIT.
+           STOP RUN.
+          SOMAR.
+                ADD VALOR-ACCEPT
+                    TO TOTAL-VALOR
+                        (ESTADO-ACCEPT,
+                         PRODUTO-ACCEPT,
+                         MES-ACCEPT).
+      *    ELE SOMA O VALOR-ACCEPT
+           ACCEPT VENDAS-ACCEPT FROM SYSIN.

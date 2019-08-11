@@ -1,0 +1,9 @@
+//GPAR57EX JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)    00020006
+//********************************************************************* 00025615
+//*    EXECUCAO DO PROGRAMA                                             00025715
+//********************************************************************* 00025815
+//EXECUTAR  EXEC PGM=AR57LVSA                                           00025925
+//STEPLIB   DD   DSN=GR.GERAL.LOADLIB,DISP=SHR                          00026006
+//CLIENTES  DD   DSN=GR.GPAR57.CLIENTES,DISP=OLD                        00026225
+//SYSIN     DD   *                                                      00026525
+00014                                                                   00026627

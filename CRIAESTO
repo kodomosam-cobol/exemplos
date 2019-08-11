@@ -1,0 +1,35 @@
+//GPAR57CA JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)    00020001
+//*****************************************************************     00020103
+//*         APAGA ARQUIVO                                         *     00020203
+//*****************************************************************     00020303
+//APAGAR  EXEC PGM=IEFBR14                                              00020403
+//ARQUIVO DD DSN=GR.GPAR57.ESTOQUE,DISP=(MOD,DELETE,DELETE),            00020506
+//     UNIT=SYSDA,SPACE=(TRK,0)                                         00020603
+//*****************************************************************     00020703
+//*         CRIA ARQUIVO                                          *     00020803
+//*****************************************************************     00020903
+//CRIAR EXEC PGM=ICEGENER                                               00021000
+//SYSPRINT DD SYSOUT=*                                                  00021100
+//SYSUT1  DD *                                                          00021201
+CCCCDDDDDDDDDDDDDDDDDDDDDDDDDEEEIIIAAAPPPPPP                            00022806
+0001CANETA BIC               050030100000132                            00022906
+0002CADERNO                  010015200000532                            00023006
+0003BORRACHA                 007015200000150                            00023106
+0004MOCHILA                  008004050001000                            00023206
+0005LAPIS                    050030100000132                            00023306
+0006UNIFORME                 010015200000532                            00023406
+0007CANETA COLORIDA          007015200000150                            00023506
+0008FOLHA A4                 008004050001000                            00023606
+//SYSUT2   DD DSN=GR.GPAR57.ESTOQUE,DISP=(NEW,CATLG,DELETE),            00023706
+//  UNIT=SYSDA,SPACE=(TRK,(1,1),RLSE),DCB=(RECFM=FB,LRECL=50,BLKSIZE=0) 00023806
+//********************************************************************* 00023906
+//* PARAMETROS                                                          00024000
+//* NOME DE USUARIO ID                                                  00030000
+//* COMANDO: JOB                                                        00040000
+//* ACCOUNT: 'RODRIGO' PODEMOS DEFINIR OU NAO                           00050000
+//* CLASS: DEFINIDO POR QUEM INSTALOU O SISTEMA                         00060000
+//* MSGCLASS: DEFINI O DISPOSITIVO DE SAIDA PARA O JOB                  00070000
+//* NOTIFY: DEFINI O USUARIO QUE RECEBERA AS NOTIFICACOES DO JOB        00080000
+//* DISP: OBRIGATORIO, TEM TRES PARAMETROS                              00081000
+//* obs:podemos colocar os parametros em cada linha                     00090000
+//*                                                                     00100000

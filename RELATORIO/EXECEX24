@@ -1,0 +1,11 @@
+//GPAR57EX JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)    00020006
+//********************************************************************* 00025615
+//*    EXECUCAO DO PROGRAMA                                             00025715
+//********************************************************************* 00025815
+//EXECUTAR  EXEC PGM=AR57EX24                                           00025921
+//STEPLIB   DD   DSN=GR.GERAL.LOADLIB,DISP=SHR                          00026006
+//* AS DUAS LINHAS ABAIXO CRIA OS ARQUIVOS CADCLI E RELATO              00026123
+//CADCLI    DD   DSN=GR.GPAR57.CADCLI,DISP=OLD                          00026221
+//* O COMANDO ACIMA PODEMOS COLOCAR SYSOUT=X QUE E O NOME DA CLASSE     00026322
+//*USADA, NO CASO DE RELATORIO USAMOS O SYSOUT                          00026422
+//RELATO    DD   SYSOUT=*                                               00026521

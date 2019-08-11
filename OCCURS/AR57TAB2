@@ -1,0 +1,68 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57TAB2.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      * PROGRAMA PARA EXIBIR TOTAIS DE VENDAS USANDO VETOR           *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       01   TOTAIS.
+            02 TOTAL-MES              PIC 9(8)V99 OCCURS 12 TIMES.
+       01   NOME-MESES.
+            02  FILLER                PIC X(09) VALUE 'JANEIRO'.
+            02  FILLER                PIC X(09) VALUE 'FEVEREIRO'.
+            02  FILLER                PIC X(09) VALUE 'MARCO'.
+            02  FILLER                PIC X(09) VALUE 'ABRIL'.
+            02  FILLER                PIC X(09) VALUE 'MAIO'.
+            02  FILLER                PIC X(09) VALUE 'JUNHO'.
+            02  FILLER                PIC X(09) VALUE 'JULHO'.
+            02  FILLER                PIC X(09) VALUE 'AGOSTO'.
+            02  FILLER                PIC X(09) VALUE 'SETEMBRO'.
+            02  FILLER                PIC X(09) VALUE 'OUTUBRO'.
+            02  FILLER                PIC X(09) VALUE 'NOVEMBRO'.
+            02  FILLER                PIC X(09) VALUE 'DEZEMBRO'.
+       01 NOME REDEFINES NOME-MESES.
+            02  NOME-MES              PIC X(09) OCCURS 12 TIMES.
+       77   TOTAL-ANUAL               PIC 9(9)V99  VALUE ZEROS.
+       77   TOTAL-EDIT                PIC ZZ.ZZZ.ZZ9,99 VALUE ZEROS.
+       77   TOTAL-ANUAL-EDIT          PIC ZZ.ZZZ.ZZ9,99 VALUE ZEROS.
+       77   TAXA-COMISSAO             PIC 9(02)V99      VALUE 0,03.
+       77   VALOR-COMISSAO            PIC 9(08)V99      VALUE ZEROS.
+       77   VALOR-COMISSAO-EDIT       PIC ZZ.ZZZ.ZZ9,99 VALUE ZEROS.
+       01   VENDAS-ACCEPT.
+            02 MES-ACCEPT             PIC 99             VALUE 0.
+            02 VALOR-ACCEPT           PIC 9(8)V99        VALUE ZEROS.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+           INITIALIZE TOTAIS.
+      **********************************************************
+           ACCEPT VENDAS-ACCEPT FROM SYSIN.
+           PERFORM SOMAR UNTIL MES-ACCEPT = 0.
+           PERFORM VARYING MES-ACCEPT FROM 1 BY 1
+                UNTIL MES-ACCEPT = 13
+                MOVE TOTAL-MES(MES-ACCEPT) TO  TOTAL-EDIT
+                ADD  TOTAL-MES(MES-ACCEPT) TO  TOTAL-ANUAL
+                COMPUTE VALOR-COMISSAO ROUNDED = TOTAL-MES(MES-ACCEPT)
+                       * TAXA-COMISSAO
+                MOVE VALOR-COMISSAO TO VALOR-COMISSAO-EDIT
+                DISPLAY 'VENDAS DE ' NOME-MES(MES-ACCEPT)
+                        ' =                 ' TOTAL-EDIT
+                DISPLAY 'COMISSAO DO MES DE ' NOME-MES(MES-ACCEPT)
+                        ' = ' VALOR-COMISSAO-EDIT
+           END-PERFORM.
+           DISPLAY '---------------------------------------'.
+           MOVE TOTAL-ANUAL  TO     TOTAL-ANUAL-EDIT.
+           DISPLAY 'TOTAL-ANUAL = ' TOTAL-ANUAL-EDIT.
+           DISPLAY '---------------------------------------'.
+           STOP RUN.
+          SOMAR.
+                ADD VALOR-ACCEPT TO TOTAL-MES(MES-ACCEPT).
+      *    ELE SOMA O VALOR-ACCEPT NO MES-ACCEPT.
+           ACCEPT VENDAS-ACCEPT FROM SYSIN.

@@ -1,0 +1,153 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57EX24.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      *===============================================================
+      *EXERCICIO 24 DA APOSTILA DE LOGICA PAG 19
+      *PROGRAMA P LISTAR CLIENTES COM SALDO >= 1.500,00 E CONTA <10000
+      *===============================================================
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+      *===============================================================
+      *ESTA SESAO SERVE PARA DECLARAR ARQUIVOS
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT CADCLI ASSIGN TO CADCLI
+              FILE STATUS IS  STATUS-CADCLI.
+           SELECT RELATORIO ASSIGN TO RELATO.
+      *ARQUIVO DE IMPRESSAO NAO TEM FILE STATUS
+      *===============================================================
+      * DECLARACAO DE ARQUIVOS
+       DATA DIVISION.
+       FILE SECTION.
+       FD CADCLI.
+       01  REG-CADCLI.
+           02 NUM-CONTA-E            PIC 9(05).
+           02 NOME-CLIENTE-E         PIC X(40).
+           02 SALDO-ATUAL-E          PIC 9(06)V99.
+       FD RELATORIO.
+       01 REG-RELATORIO              PIC X(80).
+      * SEMPRE QUANDO TRABALHARMOS COM ARQUIVOS TEMOS QUE DECLARAR
+      *OS CAMPOS NESTA SECTION, NAO PODEMOS COLOCAR VALUE NESTA SECTION
+      *===============================================================
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+      * SO PODEMOS COLOCAR (VALUE) NESTA SESSAO
+      * ESSE MODO E USADO P RELATORIO
+       01   CABEC1.
+            02 FILLER                  PIC X(16) VALUE SPACES.
+            02 FILLER                  PIC X(40) VALUE
+              'RELACAO     DE     CLIENTES   /   SALDOS'.
+            02 FILLER                  PIC X(17) VALUE SPACES.
+            02 FILLER                  PIC X(05) VALUE 'PAG. '.
+            02 NUMPAG                  PIC 9(02) VALUE ZEROS.
+       01   CABEC2.
+            02 FILLER                  PIC X(12) VALUE 'NUMERO-CONTA'.
+            02 FILLER                  PIC X(07) VALUE SPACES.
+            02 FILLER                  PIC X(04) VALUE 'NOME'.
+            02 FILLER                  PIC X(46) VALUE SPACES.
+            02 FILLER                  PIC X(05) VALUE 'SALDO'.
+       01   DETALHE.
+            02 FILLER                  PIC X(03)  VALUE SPACES.
+            02 NUM-CONT                PIC 99.999 VALUE ZEROS.
+            02 FILLER                  PIC X(12)  VALUE SPACES.
+            02 NOME                    PIC X(40)  VALUE SPACES.
+            02 FILLER                  PIC X(05)  VALUE SPACES.
+            02 SALDO                   PIC ZZ.ZZ9,99 VALUE ZEROS.
+       77   STATUS-CADCLI              PIC X(02)  VALUE SPACES.
+       77   CONTALIN                   PIC 99     VALUE ZEROS.
+      *===============================================================
+      *PADROES ADOTADOS NO MERCADO
+       PROCEDURE DIVISION.
+       000-PRINCIPAL SECTION.
+       001-PRINCIPAL.
+           PERFORM 101-INICIAR.
+           PERFORM 201-PROCESSAR UNTIL STATUS-CADCLI = '10'.
+           PERFORM 901-FINALIZAR.
+           STOP RUN.
+       099-FIM-PRINCIPAL.
+           EXIT.
+      *==============================================================
+      * SEMPRE USADO CODIGO STATUS 35
+      * STATUS: OPEN, FILE NOT PRESENT
+      *==============================================================
+      * MODULO INICIAR
+      *==============================================================
+       100-INICIAR SECTION.
+       101-INICIAR.
+           OPEN INPUT CADCLI.
+           EVALUATE STATUS-CADCLI
+              WHEN '00'
+                  CONTINUE
+              WHEN '35'
+                  DISPLAY 'ARQUIVO DO CADCLI NAO ENCONTRADO '
+                  MOVE 8 TO RETURN-CODE
+                  STOP RUN
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-CADCLI
+                  ' NO COMANDO OPEN DO CADCLI'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+           OPEN OUTPUT RELATORIO.
+           PERFORM 301-LER-CADCLI.
+       199-FIM-INICIAR.
+           EXIT.
+      *===============================================================
+      *   MODULO PROCESSAR
+      *===============================================================
+       200-PROCESSAR SECTION.
+       201-PROCESSAR.
+           IF SALDO-ATUAL-E >= 1500 AND NUM-CONTA-E < 10000
+               DISPLAY ' SALDO ' SALDO-ATUAL-E
+               DISPLAY ' CONTA ' NUM-CONTA-E
+               PERFORM 202-IMPRIMIR
+           END-IF.
+           PERFORM 300-LER-CADCLI.
+       202-IMPRIMIR.
+           IF CONTALIN >= 53 OR CONTALIN = 0
+           PERFORM 203-CABECALHO
+           END-IF.
+           MOVE NUM-CONTA-E          TO NUM-CONT.
+           MOVE NOME-CLIENTE-E       TO NOME.
+           MOVE SALDO-ATUAL-E        TO SALDO.
+           WRITE REG-RELATORIO FROM DETALHE.
+           ADD 1 TO CONTALIN.
+       203-CABECALHO.
+           ADD 1 TO NUMPAG.
+           WRITE REG-RELATORIO FROM CABEC1 AFTER PAGE.
+           WRITE REG-RELATORIO FROM CABEC2 AFTER 3 LINES.
+      * O COMANDO ACIMA PULA TRES LINHAS ANTES DE IMPRIMIR
+           MOVE SPACES TO REG-RELATORIO.
+           WRITE REG-RELATORIO.
+           MOVE 0 TO CONTALIN.
+       299-FIM-PROCESSAR.
+           EXIT.
+      *==============================================================
+      * MODULO LER-CADCLI
+      *==============================================================
+       300-LER-CADCLI SECTION.
+       301-LER-CADCLI.
+           READ CADCLI.
+           EVALUATE STATUS-CADCLI
+              WHEN '00'
+                  CONTINUE
+              WHEN '10'
+                  CONTINUE
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-CADCLI
+                          ' NO COMANDO READ DO CADCLI'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       399-FIM-LER-CADCLI.
+           EXIT.
+      *===============================================================
+      * MODULO FINALIZAR
+      *===============================================================
+       900-FINALIZAR SECTION.
+       901-FINALIZAR.
+           CLOSE CADCLI.
+           CLOSE RELATORIO.

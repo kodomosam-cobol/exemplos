@@ -1,0 +1,85 @@
+       IDENTIFICATION DIVISION.                                         00020001
+       PROGRAM-ID. AR52TAB2.                                            00030021
+       AUTHOR.     PAULINHO                                             00040006
+      ****************************************************************  00050012
+      *PROGRAMA PARA EXIBIR RENDIMENTOS COM NUMEROS NEGATIVOS        *  00060012
+      *OBS: ALTERAR TODAS AS MASCARAS E VALORES COM A LETRA S
+      *
+      ****************************************************************  00070012
+      *                                                                 00080001
+       ENVIRONMENT DIVISION.                                            00090001
+       CONFIGURATION SECTION.                                           00100001
+       SPECIAL-NAMES.                                                   00110001
+           DECIMAL-POINT IS COMMA.                                      00120001
+      *                                                                 00130001
+       DATA DIVISION.                                                   00140001
+       WORKING-STORAGE SECTION.                                         00150001
+       01 TOTAIS.                                                       00151021
+           02    TOTAL-MES           PIC S9(08)V99  OCCURS 12 TIMES.    00160021
+           02    SINAL-MES           PIC X          VALUE SPACES.
+           02    COMISSAO-MES        PIC S9(08)V99  OCCURS 12 TIMES.    00160021
+       77    TOTAL-ANUAL         PIC S9(09)V99       VALUE ZEROS.       00169315
+       77    TOTAL-COMI-ANUAL    PIC S9(09)V99       VALUE ZEROS.       00169315
+       77    TOTAL-EDIT          PIC -$$.$$$.$$9,99  VALUE ZEROS.       00169420
+       77    TOTAL-ANUAL-EDIT    PIC -$$$.$$$.$$9,99 VALUE ZEROS.       00169520
+       77    COMISSAO            PIC  99V99          VALUE ZEROS.       00169520
+       77    VALOR-COMISSAO      PIC S9(08)V99       VALUE ZEROS.
+       77    ANUAL-COMISSAO      PIC S9(08)V99       VALUE ZEROS.
+       77    VALOR-COMISSAO-EDIT PIC -$$.$$$.$$9,99  VALUE ZEROS.
+       77    ANUAL-COMISSAO-EDIT PIC -$$.$$$.$$9,99  VALUE ZEROS.
+       01 VENDAS-ACCEPT.                                                00310012
+            02 MES-ACCEPT   PIC 9(02)     VALUE ZEROS.                  00311013
+            02 SINAL-ACCEPT PIC X         VALUE SPACES.
+            02 VALOR-ACCEPT PIC S9(07)V99  VALUE ZEROS.                 00313013
+       01 NOME-MESES.
+            02 FILLER      PIC X(09)   VALUE 'JANEIRO'.
+            02 FILLER      PIC X(09)   VALUE 'FEVEREIRO'.
+            02 FILLER      PIC X(09)   VALUE 'MARCO'.
+            02 FILLER      PIC X(09)   VALUE 'ABRIL'.
+            02 FILLER      PIC X(09)   VALUE 'MAIO'.
+            02 FILLER      PIC X(09)   VALUE 'JUNHO'.
+            02 FILLER      PIC X(09)   VALUE 'JULHO'.
+            02 FILLER      PIC X(09)   VALUE 'AGOSTO'.
+            02 FILLER      PIC X(09)   VALUE 'SETEMBRO'.
+            02 FILLER      PIC X(09)   VALUE 'OUTUBRO'.
+            02 FILLER      PIC X(09)   VALUE 'NOVEMBRO'.
+            02 FILLER      PIC X(09)   VALUE 'DEZEMBRO'.
+        01 NOMES REDEFINES NOME-MESES.
+            02 NOME-MES    PIC X(09) OCCURS 12 TIMES.
+      ******************************************************************00316002
+       PROCEDURE DIVISION.                                              00317002
+       INICIO.                                                          00318002
+           INITIALIZE TOTAIS.
+           ACCEPT COMISSAO FROM SYSIN
+           ACCEPT VENDAS-ACCEPT    FROM                SYSIN            00318112
+           IF SINAL-ACCEPT = '-'
+      *    COMPUTE VALOR-ACCEPT = VALOR-ACCEPT * -1
+              MULTIPLY VALOR-ACCEPT BY -1 GIVING VALOR-ACCEPT
+           END-IF.
+           PERFORM SOMAR   UNTIL MES-ACCEPT = 0                         00319012
+           PERFORM VARYING MES-ACCEPT FROM 1 BY 1 UNTIL  MES-ACCEPT = 1300319012
+              MOVE TOTAL-MES(MES-ACCEPT) TO TOTAL-EDIT                  00320015
+              ADD  TOTAL-MES(MES-ACCEPT) TO TOTAL-ANUAL                 00330015
+              DISPLAY 'VENDAS NO MES ' NOME-MES(MES-ACCEPT)             00340015
+                         '=' TOTAL-EDIT
+              MOVE COMISSAO-MES(MES-ACCEPT) TO VALOR-COMISSAO-EDIT
+              ADD  COMISSAO-MES(MES-ACCEPT) TO ANUAL-COMISSAO           00330015
+              DISPLAY 'COMISSAO NO MES ' NOME-MES (MES-ACCEPT)          00340015
+                         ' = ' VALOR-COMISSAO-EDIT
+              DISPLAY '---------------------------------------'
+           END-PERFORM.
+           DISPLAY '-------------------------------------------'        00349615
+           MOVE TOTAL-ANUAL TO TOTAL-ANUAL-EDIT.                        00349715
+           MOVE ANUAL-COMISSAO TO ANUAL-COMISSAO-EDIT.                  00349715
+           DISPLAY 'VENDAS NO ANO    =' TOTAL-ANUAL-EDIT.               00349819
+           DISPLAY 'COMISSAO NO ANO    =' ANUAL-COMISSAO-EDIT           00349819
+           DISPLAY '-------------------------------------------'        00349915
+           STOP RUN.                                                    00380002
+       SOMAR.                                                           00390012
+           ADD VALOR-ACCEPT TO TOTAL-MES(MES-ACCEPT).
+           COMPUTE VALOR-COMISSAO = VALOR-ACCEPT * COMISSAO / 100
+           ADD VALOR-COMISSAO TO COMISSAO-MES(MES-ACCEPT)
+           ACCEPT VENDAS-ACCEPT    FROM                SYSIN.           00660012
+           IF SINAL-ACCEPT = '-'
+              MULTIPLY VALOR-ACCEPT BY -1 GIVING VALOR-ACCEPT
+           END-IF.

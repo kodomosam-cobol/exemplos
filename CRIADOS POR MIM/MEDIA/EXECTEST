@@ -1,0 +1,4 @@
+//GPAR57EX JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)    00020006
+//EXECUTAR  EXEC PGM=AR57TEST                                           00020411
+//STEPLIB   DD   DSN=GR.GERAL.LOADLIB,DISP=SHR                          00020506
+//SYSOUT    DD   SYSOUT=X                                               00020610

@@ -1,0 +1,30 @@
+//GPAR57CA JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)    00020001
+//*****************************************************************     00020103
+//*         APAGA ARQUIVO                                         *     00020203
+//*****************************************************************     00020303
+//APAGAR  EXEC PGM=IEFBR14                                              00020403
+//ARQUIVO DD DSN=GR.GPAR57.MOVIMENT,DISP=(MOD,DELETE,DELETE),           00020507
+//     UNIT=SYSDA,SPACE=(TRK,0)                                         00020603
+//*****************************************************************     00020703
+//*         CRIA ARQUIVO                                          *     00020803
+//*****************************************************************     00020903
+//CRIAR EXEC PGM=ICEGENER                                               00021000
+//SYSPRINT DD SYSOUT=*                                                  00021100
+//SYSUT1  DD *                                                          00021201
+AA021FELIPE DA SILVA GOMES A       JUR00825361987-12-0102I              00021509
+AA022THIAGO DA SILVA GOMES B       JUR00825361986-11-0102I              00021609
+AA023ROGERI DA SILVA GOMES C       JUR00825361987-09-0102I              00021709
+AA024MARCOS DA SILVA GOMES D       JUR00825361985-08-0102I              00021810
+AA025EDUARDODA SILVA GOMES F       JUR00825361986-07-0102I              00021910
+AA026PATRICIA SOUZA                JUR00825361987-06-0102I              00022010
+AA027FELIPE CUNHA                  JUR00825361988-05-0102I              00022110
+AA028CARLOS DE MELO                JUR00825361988-04-0102I              00022210
+AA029VALMA  DE MELO                JUR00825361989-03-0104I              00022310
+AA030FELIPE DA SILVA GOMES M       JUR00825361977-02-0102I              00022409
+AA031FELIPE DA SILVA GOMES N       JUR00825361977-01-0102I              00022509
+AA032FELIPE DA SILVA GOMES O       JUR00825361967-12-0102I              00022609
+AA033FELIPE DA SILVA GOMES P       JUR00825361979-12-0102I              00022709
+AA034FELIPE DA SILVA GOMES Q       JUR00825361987-12-0102I              00022809
+AA030FELIPE DA SILVA GOMES Y       JUR00825361987-12-0102I              00022909
+//SYSUT2   DD DSN=GR.GPAR57.MOVIMENT,DISP=(NEW,CATLG,DELETE),           00023007
+// UNIT=SYSDA,SPACE=(TRK,(1,1),RLSE),DCB=(RECFM=FB,LRECL=58,BLKSIZE=0)  00023106

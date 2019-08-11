@@ -1,0 +1,54 @@
+//GPAR57CV JOB 'RODRIGO',MSGCLASS=X,CLASS=C,NOTIFY=GPAR57               00010002
+//***********************************************************           00011000
+//*     STEP PARA DEFINIR ARQUIVO VSAM VAZSIO               *           00012000
+//***********************************************************           00013000
+//* NO CASO DE (VSAM) SAO OBRIGATORIOS 4 STEPS                          00013100
+//STEPDEF   EXEC PGM=IDCAMS                                             00014000
+//SYSPRINT  DD   SYSOUT=*                                               00015000
+//SYSIN     DD  *                                                       00016000
+ DELETE GR.GPAR57.CLIENTES   PURGE CLUSTER                              00017000
+ IF  MAXCC = 8 THEN SET MAXCC= 0                                        00018000
+ DEFINE  CLUSTER                                  -                     00019000
+     (NAME (GR.GPAR57.CLIENTES)                   -                     00020001
+      INDEXED                                     -                     00030000
+      VOL (PR39X7)                                -                     00040000
+      TRK (1,1)                                   -                     00050000
+      RECORDSIZE (48,48)                          -                     00060000
+      KEYS(05,0))                                                       00070000
+//***********************************************************           00080000
+//*     STEP PARA CRIAR ARQUIVO TEMPORARIO DE DADOS         *           00090000
+//***********************************************************           00100000
+//STEPGEN  EXEC PGM=ICEGENER                                            00110000
+//*           PARAMETROS DE EXECUCOES ESPECIAIS                         00120000
+//SYSIN    DD   DUMMY              DUMMY                                00130000
+//*           SYSOUT DE SAIDA DE ERROS                                  00140000
+//SYSPRINT DD   SYSOUT=X           CLASSE DE SAIDA DE ERROS             00150000
+//*           ENTRADA DE DADOS                                          00160000
+//SYSUT1   DD   *                                                       00170000
+00009087RODRIGO MOREIRA     22331059829005000000                        00190000
+00010088LUANA NASCIMENTO    22356598292006000000                        00200000
+00011089LAURA SAMPAIO       22331057829007000000                        00210000
+00012090JULIA SAMPAIO       22456859827008000000                        00211000
+00013091IREMAR SAMPAIO      22556859824009000000                        00212000
+00014091RENAN SAMPAIO       22656759826010000000                        00213000
+//*           ESPECIFICACAO DO ARQUIVO DE SAIDA                         00220000
+//SYSUT2   DD   DSN=&&TEMP,DISP=(NEW,PASS),                             00230000
+//             UNIT=SYSDA,SPACE=(TRK,(1,1),RLSE),                       00240000
+//             DCB=(RECFM=FB,LRECL=48,BLKSIZE=0)                        00250000
+//***********************************************************           00260000
+//*     STEP PARA CARREGAR DADOS TEMPORARIOS PARA O VSAM    *           00270000
+//***********************************************************           00280000
+//STEPREP  EXEC PGM=IDCAMS                                              00290000
+//SYSPRINT DD SYSOUT=*                                                  00300000
+//ARQENT   DD DSN=&&TEMP,DISP=OLD                                       00310000
+//ARQSAI   DD DSN=GR.GPAR57.CLIENTES,DISP=SHR                           00320003
+//SYSIN DD *                                                            00330000
+    REPRO INFILE(ARQENT) OUTFILE(ARQSAI)                                00340000
+//*****************************************************************     00350000
+//*  LISTA CONTEUDO DE ARQUIVO VSAM                      *              00360000
+//*****************************************************************     00370000
+//STEPPRT EXEC PGM=IDCAMS                                               00380000
+//SYSPRINT DD SYSOUT=*                                                  00390000
+//ARQPRINT DD DSN=GR.GPAR57.CLIENTES,DISP=SHR                           00400002
+//SYSIN    DD *                                                         00410000
+    PRINT INFILE(ARQPRINT) CHAR                                         00420000

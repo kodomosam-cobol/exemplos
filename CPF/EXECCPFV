@@ -1,0 +1,11 @@
+//GPAR57EX  JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)   00010020
+//EXECUTAR  EXEC PGM=AR57CPFV                                           00010425
+//STEPLIB  DD    DSN=GR.GERAL.LOADLIB,DISP=SHR                          00010516
+//SYSIN    DD     *                                                     00010616
+22331059829                                                             00013023
+32504019846                                                             00014028
+38223076888                                                             00015024
+11111111155                                                             00015128
+22222222234                                                             00015228
+12547886545                                                             00015328
+00000000000                                                             00016026

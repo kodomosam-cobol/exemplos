@@ -1,0 +1,106 @@
+//GPAR57CV JOB 'RODRIGO',MSGCLASS=X,CLASS=C,NOTIFY=GPAR57               00090031
+//***********************************************************           00100031
+//*     STEP PARA DEFINIR ARQUIVO VSAM VAZSIO               *           00110031
+//***********************************************************           00120031
+//* NO CASO DE (VSAM) SAO OBRIGATORIOS 4 STEPS                          00130031
+//STEPDEF   EXEC PGM=IDCAMS                                             00140031
+//SYSPRINT  DD   SYSOUT=*                                               00150031
+//SYSIN     DD  *                                                       00160031
+ DELETE GR.GPAR57.PRODUTOS   PURGE CLUSTER                              00170031
+ IF  MAXCC = 8 THEN SET MAXCC= 0                                        00180031
+ DEFINE  CLUSTER                                  -                     00190031
+     (NAME (GR.GPAR57.PRODUTOS)                   -                     00200031
+      INDEXED                                     -                     00210031
+      VOL (PR39X7)                                -                     00220031
+      TRK (1,1)                                   -                     00230031
+      RECORDSIZE (65,65)                          -                     00240031
+      KEYS(06,0))                                                       00250032
+//***********************************************************           00260031
+//******STEP PARA CRIAR ARQUIVO TEMPORARIO DE DADOS**********           00270031
+//***********************************************************           00280031
+//STEPGEN  EXEC PGM=ICEGENER                                            00290031
+//*           PARAMETROS DE EXECUCOES ESPECIAIS                         00300031
+//SYSIN    DD   DUMMY              DUMMY                                00310031
+//*           SYSOUT DE SAIDA DE ERROS                                  00320031
+//SYSPRINT DD   SYSOUT=X           CLASSE DE SAIDA DE ERROS             00330031
+//*           ENTRADA DE DADOS                                          00340031
+//SYSUT1   DD   *                                                       00350031
+000010ARROZ                              P12345010000500200007000       00370031
+000011FEIJAO                             P14586020000400300006000       00380031
+000012PAO PULMAM                         P14789030000600400003000       00381031
+000013BOLACHA                            P13652050000700100002000       00382031
+000041MOLHO DE TOMATE                    P13652055555300030004000
+000042MACARRAO                           P13652060000300040005000
+000043ARROZ                              P12345010000500200007000       00370031
+000044MIOJO                              P14586020000400300006000       00380031
+000045BOLACHA INTEGRAL                   P14789030000600400003000       00381031
+000046BOLACHA RECHEADA DE CHOCOLATE      P13652050000700100002000       00382031
+000047BOLACHA RECHEADA DE MORANGO        P13652055555300030004000
+000048MIOJO PULLMAM                      P13652060000300040005000
+//************ESPECIFICACAO DO ARQUIVO DE SAIDA*********************    00420031
+//SYSUT2   DD  DSN=&&TEMP,DISP=(NEW,PASS),                              00430032
+//         UNIT=SYSDA,SPACE=(TRK,(1,1),RLSE),                           00440031
+//         DCB=(RECFM=FB,LRECL=65,BLKSIZE=0)                            00450031
+//***********************************************************           00460031
+//******STEP PARA CARREGAR DADOS TEMPORARIOS PARA O VSAM*****           00470031
+//***********************************************************           00480031
+//STEPREP  EXEC PGM=IDCAMS                                              00490031
+//SYSPRINT DD SYSOUT=*                                                  00500031
+//ARQENT   DD DSN=&&TEMP,DISP=(OLD,DELETE,DELETE)                       00510032
+//ARQSAI   DD DSN=GR.GPAR57.PRODUTOS,DISP=SHR                           00520031
+//SYSIN DD *                                                            00530031
+    REPRO INFILE(ARQENT) OUTFILE(ARQSAI)                                00540031
+//*****************************************************************     00550031
+//***LISTA CONTEUDO DE ARQUIVO VSAM********************************     00560031
+//*****************************************************************     00570031
+//STEPPRT EXEC PGM=IDCAMS                                               00580031
+//SYSPRINT DD SYSOUT=*                                                  00590031
+//ARQPRINT DD DSN=GR.GPAR57.PRODUTOS,DISP=SHR                           00600031
+//SYSIN    DD *                                                         00610031
+    PRINT INFILE(ARQPRINT) CHAR                                         00620031
+//*****************************************************************     00640031
+//**********APAGA ARQUIVO******************************************     00650031
+//*****************************************************************     00660031
+//APAGAR  EXEC PGM=IEFBR14                                              00670031
+//ARQUIVO DD DSN=GR.GPAR57.MOVIM,DISP=(MOD,DELETE,DELETE),              00680031
+//     UNIT=SYSDA,SPACE=(TRK,0)                                         00690031
+//*****************************************************************     00700031
+//**********CRIA ARQUIVO*******************************************     00710031
+//*****************************************************************     00720031
+//CRIAR EXEC PGM=ICEGENER                                               00730031
+//SYSPRINT DD SYSOUT=*                                                  00740031
+//SYSUT1  DD *                                                          00750031
+000014SABONETE                           P05826002003000500000200A      00881031
+000011MELANCIA                           P14758008005000500000500A      00882031
+000013BOLACHA AGUA E SAL                 P02568007005000500000500A      00883031
+000041SABONETE LIQUIDO                   P05528001001000300000600A      00884031
+000042AMACIANTE                          P00032004003000200000700A
+000045                                                           E
+000048                                                           E
+000049CADERNO TIPO 1                                             I
+000050CADERNO TIPO 2                                             I
+000051CADERNO TIPO 3                                             I
+000052CADERNO TIPO 4                                             I
+000053CADERNO TIPO 5                                             I
+000054CADERNO TIPO 6                                             I
+000055CADERNO TIPO 7                                             I
+000056CADERNO TIPO 8                                             I
+000057CADERNO TIPO 9                                             I
+000058CADERNO TIPO 10                                            I
+//SYSUT2   DD DSN=GR.GPAR57.MOVIM,DISP=(NEW,CATLG,DELETE),              00890032
+//         UNIT=SYSDA,SPACE=(TRK,(1,1),RLSE),                           00900032
+//         DCB=(RECFM=FB,LRECL=66,BLKSIZE=0)
+//*************EXECUCAO DO PROGRAMA***********************************  00901131
+//EXECUTAR  EXEC PGM=AR57EX17                                           00902031
+//STEPLIB   DD   DSN=GR.GERAL.LOADLIB,DISP=SHR                          00903031
+//PRODUTOS  DD   DSN=GR.GPAR57.PRODUTOS,DISP=SHR                        00904031
+//MOVIMEN   DD   DSN=GR.GPAR57.MOVIM,DISP=(OLD,DELETE,DELETE)           00904132
+//RELATO    DD   SYSOUT=X                                               00904231
+//*****************************************************************     00904431
+//***LISTA CONTEUDO DE ARQUIVO VSAM********************************     00904531
+//*****************************************************************     00904631
+//LSTVSAM  EXEC PGM=IDCAMS                                              00904731
+//SYSPRINT DD SYSOUT=*                                                  00904831
+//ARQPRINT DD DSN=GR.GPAR57.PRODUTOS,DISP=SHR                           00904931
+//SYSIN    DD *                                                         00905031
+    PRINT INFILE(ARQPRINT) CHAR                                         00905131

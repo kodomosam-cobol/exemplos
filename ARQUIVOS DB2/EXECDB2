@@ -1,0 +1,15 @@
+//GPAR57DB  JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)   00010004
+//STEP01A   EXEC PGM=IKJEFT01,DYNAMNBR=20                               00020000
+//STEPLIB   DD   DSN=DSN810.SDSNLOAD,DISP=SHR                           00030000
+//DBRMLIB   DD   DSN=DSN810.DBRMLIB.DATA,DISP=SHR                       00040000
+//SYSTSPRT  DD   SYSOUT=*                                               00050000
+//SYSPRINT  DD   SYSOUT=*                                               00060000
+//SYSUDUMP  DD   SYSOUT=*                                               00070000
+//*SYSOUT   DD   SYSOUT=*                                               00080002
+//REPORT    DD   SYSOUT=*                                               00090000
+//SYSTSIN   DD   *                                                      00100000
+ DSN SYSTEM(DB8G)                                                       00110000
+ RUN PROGRAM(AR57ADB2) PLAN(AR57ADB2) LIB('GR.GERAL.LOADLIB')           00120007
+ END                                                                    00130000
+//MOVIMENT  DD DSN=GR.GPAR57.MOVIMENT,DISP=OLD                          00140006
+//RELATO    DD SYSOUT=*                                                 00150006

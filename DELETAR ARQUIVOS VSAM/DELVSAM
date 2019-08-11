@@ -1,0 +1,9 @@
+//GPAR57CV JOB 'RODRIGO',MSGCLASS=X,CLASS=C,NOTIFY=GPAR57               00010000
+//***********************************************************           00011000
+//*     STEP PARA DEFINIR ARQUIVO VSAM VAZSIO               *           00012000
+//***********************************************************           00013000
+//* NO CASO DE (VSAM) SAO OBRIGATORIOS 4 STEPS                          00013100
+//STEPDEL   EXEC PGM=IDCAMS                                             00014000
+//SYSPRINT  DD   SYSOUT=*                                               00015000
+//SYSIN     DD  *                                                       00016000
+ DELETE GR.GPAR57.PRODUTOS   PURGE CLUSTER                              00017000

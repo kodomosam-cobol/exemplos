@@ -1,0 +1,77 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57TEST.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *PROGRAMA PARA EXIBICAO DAS OPERACOES ARITMETICAS              *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77 VAR1                     PIC 99       VALUE 0.
+       77 VAR2                     PIC 99       VALUE 0.
+       77 VAR3                     PIC 99       VALUE 0.
+       77 VAR4                     PIC 99       VALUE 0.
+       77 VAR5                     PIC 99       VALUE 0.
+       77 VAR6                     PIC 99       VALUE 0.
+       77 VAR7                     PIC 99       VALUE 0.
+       77 VAR8                     PIC 99       VALUE 0.
+       77 VAR1-EDIT                PIC  9(3)V9  VALUE ZEROS.
+       77 VAR2-EDIT                PIC  9(3)V9  VALUE ZEROS.
+       77 VAR3-EDIT                PIC  9(3)V9  VALUE ZEROS.
+       77 VAR4-EDIT                PIC  9(3)V9  VALUE ZEROS.
+       77 VAR5-EDIT                PIC  9(3)V9  VALUE ZEROS.
+       77 VAR6-EDIT                PIC  9(3)V9  VALUE ZEROS.
+       77 VAR7-EDIT                PIC  9(3)V9  VALUE ZEROS.
+       77 VAR8-EDIT                PIC  9(3)V9  VALUE ZEROS.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+      **************************************************************
+      *              EXEMPLO DE COMPUTER
+      ************************************************************
+           MOVE 10   TO VAR1.
+           MOVE 20   TO VAR2.
+           MOVE 30   TO VAR3.
+           MOVE 40   TO VAR4.
+           MOVE 50   TO VAR5.
+           MOVE 60   TO VAR6.
+           MOVE 70   TO VAR7.
+           MOVE 80   TO VAR8.
+           COMPUTE   VAR1-EDIT ROUNDED = (VAR1 + VAR8) / 2
+           COMPUTE   VAR2-EDIT ROUNDED = (VAR2 + VAR7) / 2
+           COMPUTE   VAR3-EDIT ROUNDED = (VAR3 + VAR6) / 2
+           COMPUTE   VAR4-EDIT ROUNDED = (VAR4 + VAR5) / 2
+           COMPUTE   VAR5-EDIT ROUNDED = (VAR5 + VAR4) / 2
+           COMPUTE   VAR6-EDIT ROUNDED = (VAR6 + VAR3) / 2
+           COMPUTE   VAR7-EDIT ROUNDED = (VAR7 + VAR2) / 2
+           COMPUTE   VAR8-EDIT ROUNDED = (VAR8 + VAR1) / 2
+      ************************************************************
+      *    O COMANDO COMPUTE SERVE PARA TRABALHAR COM OPERACOES
+      * ARITMETICAS
+      ************************************************************
+               ON SIZE ERROR
+                   DISPLAY 'OVERFLOW'
+               NOT ON SIZE ERROR
+                   DISPLAY 'A MEDIA DE ' VAR1 ' + '
+                   VAR8 ' EH ' VAR1-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR2 ' + '
+                   VAR7 ' EH ' VAR2-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR3 ' + '
+                   VAR6 ' EH ' VAR3-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR4 ' + '
+                   VAR5 ' EH ' VAR4-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR5 ' + '
+                   VAR4 ' EH ' VAR5-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR6 ' + '
+                   VAR3 ' EH ' VAR6-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR7 ' + '
+                   VAR2 ' EH ' VAR7-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR8 ' + '
+                   VAR1 ' EH ' VAR8-EDIT
+           END-COMPUTE.
+           STOP RUN.

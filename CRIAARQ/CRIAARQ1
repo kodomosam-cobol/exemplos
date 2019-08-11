@@ -1,0 +1,39 @@
+//GPAR57CA JOB 'RODRIGO',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,TIME=(0,5)    00020001
+//=================================================================     00020106
+//*         APAGA ARQUIVO                                         *     00020203
+//APAGAR  EXEC PGM=IEFBR14                                              00020703
+//ARQUIVO DD DSN=GR.GPAR57.CLIENTES,DISP=(MOD,DELETE,DELETE),           00020803
+//        UNIT=SYSDA,SPACE=(TRK,0)                                      00020906
+//*    PROGRAMA IEFBR14 E UM PROGRAMA DA IBM, ELE CRIA UM               00021006
+//*    ARQUIVO NOVO                                                     00021106
+//*****************************************************************     00021203
+//*         CRIA ARQUIVO                                          *     00021303
+//*****************************************************************     00021403
+//CRIAR EXEC PGM=ICEGENER                                               00021500
+//SYSPRINT DD SYSOUT=*                                                  00021600
+//SYSUT1  DD *                                                          00021701
+000100001RODRIGO SAMPAIO   00120000                                     00021800
+000300003LAURA SAMPAIO     00200000                                     00021900
+000123455IREMAR SAMPAIO    00300000                                     00022004
+012345453JULIA SAMPAIO     00400000                                     00022104
+034233333LUANA SAMPAIO     00500000                                     00022204
+045675555ALMIR SAMPAIO     00600000                                     00022304
+055678877BETO BARBOZA      00700000                                     00022404
+000400004LUANA SAMPAIO     00250000                                     00022500
+000234445RENAN SAMPAIO     00555555                                     00022605
+123222222ROZIELBA SAMPAI   00200000                                     00022705
+545454636OZANA DE FREITA   00233333                                     00022805
+878888888CARLOS CORNO      00777777                                     00022905
+656464646VALMA SAMPAIO     00899999                                     00023005
+//SYSUT2   DD DSN=GR.GPAR57.CLIENTES,DISP=(NEW,CATLG,DELETE),           00023100
+// UNIT=SYSDA,SPACE=(TRK,(1,1),RLSE),DCB=(RECFM=FB,LRECL=35,BLKSIZE=0)  00023202
+//* PARAMETROS                                                          00024000
+//* NOME DE USUARIO ID                                                  00030000
+//* COMANDO: JOB                                                        00040000
+//* ACCOUNT: 'RODRIGO' PODEMOS DEFINIR OU NAO                           00050000
+//* CLASS: DEFINIDO POR QUEM INSTALOU O SISTEMA                         00060000
+//* MSGCLASS: DEFINI O DISPOSITIVO DE SAIDA PARA O JOB                  00070000
+//* NOTIFY: DEFINI O USUARIO QUE RECEBERA AS NOTIFICACOES DO JOB        00080000
+//* DISP: OBRIGATORIO, TEM TRES PARAMETROS                              00081000
+//* obs:podemos colocar os parametros em cada linha                     00090000
+//*                                                                     00100000

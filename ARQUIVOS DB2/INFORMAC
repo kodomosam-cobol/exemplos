@@ -1,0 +1,55 @@
+ PARA COPIAR UM ARQUIVO PODEMOS IR DIRETO NA JOBLIB
+ EXEMPLO  E  JOBLIB(NOMEDOARQUIVO)
+ IRA ABRIR UM ARQUIVO EM BRANCO
+ NA LINHA DE COMANDO DIGITAMOS
+ COPY 'GR.GPAR57.JOBLIB(NOMEDOARQUIVO)'
+ ********************************************************************
+ SISTEMA DECIMAL     0-1-2-3-4-5-6-7-8-9
+ SISTEMA HEXADECIMAL 0-1-2-3-4-5-6-7-8-9-A-B-C-D-E-F
+ SISTEMA OCTAL       0-1-2-3-4-5-6-7-8
+ SISTEMA BINARIO     0-1
+ EXEMPLO NUMERO 1234
+ BINARIO = 010011010010
+ DECIMAL = 1234
+ HEXADECIMAL = 4D2
+ OCTAL  = 2322
+ ********************************************************************
+ EXEMPLO:
+ 77 VAR1      PIC    9999        VALUE 0.
+ ********************************************************************
+ 77 VAR1      PIC    9999 COMP   VALUE 0.
+                         (COMP CONVERTE PARA BINARIO)
+ ********************************************************************
+ 77 VAR1      PIC    9999V99   COMP-3
+   OBS CADA GRUPO DE TRES REPRESENTA UM ALGARISMO,
+   USAMOS O COMP-3 QUANDO TEMOS UM SINAL
+   A 1010    +
+   B 1011    -
+   C 1100    +
+   D 1101    -
+   E 1110    +
+   F 1111 +(PADRAO, SEMPRE E POSITIVO)
+**********************************************************************
+   REGRAS PARA CALCULAR LRECL COM BINARIOS
+   COMP
+   DE 9(1)COMP  ATE 9(04)COMP    2 CARACTERES
+   DE 9(5)COMP  ATE 9(08)COMP    4 CARACTERES
+   DE 9(9)COMP  ATE 9(18)COMP    8 CARACTERES
+*********************************************************************
+   REGRAS PARA CALCULAR O LRECL
+
+   COMP-3
+   LRECL = QTDE CARACTERES / 2 + MEIO BYTE PARA SINAL
+   EXEMPLOS
+       9(04)  COMP-3
+       LRECL = 4 / 2 + MEIO = 2 E MEIO
+
+       9(05)  COMP-3
+       LRECL = 5 / 2 + MEIO = 2 E MEIO + MEIO = 3
+**********************************************************************
+             MODO DO MAINFRAME
+       0000  0100  1101  0010 BINARIO
+       1111  1011  0010  1110 BINARIO NEGATIVO(ELE TROCA A ORDEM
+       COM EXCECAO DO ULTIMO)
+        F     B     2     E   HEXADECIMAL
+*******************************************************************

@@ -1,0 +1,128 @@
+--CREATE TABLE FUNCIONARIOS
+--   (
+--      COD_FUN    CHAR(5)       PRIMARY KEY NOT NULL,
+--      NOME_FUN   VARCHAR(30)   NOT NULL,
+--      DEP_FUN    CHAR(3) NOT   NULL,
+--      SAL_FUN    DECIMAL(7,2)  NOT NULL,
+--      ADMISS_FUN DATE                  ,
+--      FILHOS_FUN SMALLINT)
+----------------------------------------------------------------
+--CREATE TABLE TEST
+--   (
+--      COD_FUN    ROWID         PRIMARY KEY NOT NULL,
+--      NOME_FUN   VARCHAR(30)   NOT NULL,
+--      DEP_FUN    CHAR(3) NOT   NULL,
+--      SAL_FUN    DECIMAL(7,2)  NOT NULL,
+--      ADMISS_FUN DATE                  ,
+--      FILHOS_FUN SMALLINT)
+--NUMERACAO AUTOMATICA
+-------------------------------------------------------------
+--CREATE TABLE DEPARTAMENTOS
+--   (
+--      COD_DEPTO      CHAR(3)      PRIMARY KEY NOT NULL,
+--      NOME_DEPTO     VARCHAR(20)  NOT NULL)
+-------------------------------------------------------------
+--CREATE UNIQUE INDEX  ID_FUN
+--   ON  FUNCIONARIOS (COD_FUN)
+-------------------------------------------------------------
+--CREATE UNIQUE INDEX   ID_DEPTO
+--   ON  DEPARTAMENTOS (COD_DEPTO)
+-------------------------------------------------------------
+--ALTER TABLE FUNCIONARIOS
+--      ADD  FOREIGN KEY(DEP_FUN)
+--         REFERENCES DEPARTAMENTOS
+--            ON DELETE RESTRICT
+-------------------------------------------------------------
+--INSERT INTO DEPARTAMENTOS
+--  (COD_DEPTO,NOME_DEPTO)
+--  VALUES('XXX',' SAMPAIO');
+--INSERT INTO DEPARTAMENTOS
+--  (COD_DEPTO,NOME_DEPTO)
+--  VALUES('ZZZ',' SAMPAIO')
+-------------------------------------------------------------
+--INSERT INTO FUNCIONARIOS
+--  VALUES('AA016','CRISTINA FIRMINO','JUR',1000.00,'1979-11-15',3)
+-------------------------------------------------------------
+--SELECT * FROM DEPARTAMENTOS
+--SELECT * FROM FUNCIONARIOS
+-------------------------------------------------------------
+--  UPDATE FUNCIONARIOS SET SAL_FUN = 14000.00
+--    WHERE COD_FUN = 'AA011'
+--  UPDATE FUNCIONARIOS SET SAL_FUN = 2400.00
+--    WHERE COD_FUN = 'AA011'
+--  UPDATE FUNCIONARIOS SET SAL_FUN = 2300.00
+--    WHERE COD_FUN = 'AA012';
+--  UPDATE FUNCIONARIOS SET COD_FUN = 'AA013'
+--    WHERE COD_FUN = 'AA016'
+-------------------------------------------------------------
+--SELECT NOM_FUN FROM FUNCIONARIOS
+--   WHERE
+-------------------------------------------------------------
+--DELETE FROM FUNCIONARIO
+--   WHERE COD_FUN = 'AA001'
+-------------------------------------------------------------
+--SELECT * FROM FUNCIONARIOS
+--   WHERE NOME_FUN LIKE '%RODRIGO SAMPAIO%'
+--SELECT AVG(SAL_FUN) AS "MEDIA"
+--   FROM FUNCIONARIOS
+-------------------------------------------------------------
+--SELECT * FROM DEPARTAMENTOS
+--SELECT * FROM FUNCIONARIOS
+-------------------------------------------------------------
+--SELECT DEP_FUN AS DEPARTAMENTO, SUM(SAL_FUN) AS SALARIO
+--   FROM FUNCIONARIOS
+--      WHERE  DEP_FUN = 1
+-------------------------------------------------------------
+--SELECT YEAR(ADMISS_FUN) AS "ANO DE ADMISSAO",
+--       AVG(SAL_FUN) AS "SOMA DOS SALARIOS"
+--   FROM FUNCIONARIOS
+--      GROUP BY YEAR(ADMISS_FUN)
+--         ORDER BY YEAR(ADMISS_FUN)
+-------------------------------------------------------------
+--SELECT NOME_FUN, NOME_DEPTO
+--   FROM FUNCIONARIOS F, DEPARTAMENTOS D
+--     WHERE F.COD_FUN =  D.COD_DEPTO
+-------------------------------------------------------------
+--SELECT NOME_FUN, NOME_DEPTO
+--   FROM FUNCIONARIOS, DEPARTAMENTOS
+--     WHERE DEP_FUN = COD_DEPTO
+--        ORDER BY NOME_FUN
+-------------------------------------------------------------
+--SELECT NOME_FUN, SAL_FUN
+--   FROM FUNCIONARIOS, DEPARTAMENTOS
+--     WHERE DEP_FUN = 'JUR'
+--        AND SAL_FUN >
+--          (SELECT MAX(SAL_FUN)
+--             FROM FUNCIONARIOS
+--               WHERE DEP_FUN = 'FIN')
+--     ORDER BY NOME_FUN
+-----------------------------------------------------------
+--SELECT * FROM DEPARTAMENTOS
+--SELECT * FROM FUNCIONARIOS
+--SELECT DEP_FUN, COUNT(*)AS "TOTAL FUN"
+--  FROM FUNCIONARIOS
+--    GROUP BY DEP_FUN
+--      ORDER BY DEP_FUN
+-----------------------------------------------------------
+--SELECT V1.COD_DEPTO AS "DEPARTAMENTOS",
+--  (SELECT COUNT(*) FROM FUNCIONARIOS
+--     WHERE FUNCIONARIOS.DEP_FUN = V1.COD_DEPTO) AS "DEPTO"
+--FROM DEPARTAMENTOS V1
+--         ORDER BY V1.COD_DEPTO
+-------------------------------------------------------------
+--INSERT INTO FUNCIONARIOS
+--  (COD_FUN, NOME_FUN, DEP_FUN, SAL_FUN)
+--    VALUES ('AA020','BETO','CON',12000.00)
+--INSERT INTO FUNCIONARIOS
+--  (COD_FUN, NOME_FUN, DEP_FUN, SAL_FUN)
+--    VALUES ('AA011','PRISCILA MENDES','CTD',7000.00)
+--INSERT INTO FUNCIONARIOS
+--  (COD_FUN, NOME_FUN, DEP_FUN, SAL_FUN)
+--    VALUES ('AA012','THIAGO','XXX',8000.00)
+--INSERT INTO FUNCIONARIOS
+--  (COD_FUN, NOME_FUN, DEP_FUN, SAL_FUN)
+--    VALUES ('AA013','ZEZE','XXX',13000.00)
+--SELECT * FROM DEPARTAMENTOS
+  SELECT * FROM FUNCIONARIOS
+
+

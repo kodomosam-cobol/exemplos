@@ -1,0 +1,124 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57LVSA.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      *
+      *EXERCICIO CRIADO NA CLASSE
+      *PROGRAMA PARA CONSULTAS DE CLIENTES (VSAM)
+      *
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+      *===============================================================
+      *ESTA SESAO SERVE PARA DECLARAR ARQUIVOS
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT CLIENTES ASSIGN TO CLIENTES
+              ORGANIZATION IS INDEXED
+              ACCESS MODE RANDOM
+              RECORD KEY IS CONTA
+              FILE STATUS IS STATUS-CLIENTES.
+      *PODEMOS DECLARAR OUTRA CHAVE USANDO (ALTERNATE RECORD KEY)
+      *===============================================================
+      * DECLARACAO DE ARQUIVOS
+       DATA DIVISION.
+       FILE SECTION.
+       FD CLIENTES.
+       01  REG-CLIENTES.
+           02 CONTA                  PIC 9(05).
+           02 AGENCIA                PIC 9(03).
+           02 NOME                   PIC X(20).
+           02 CPF                    PIC 9(11).
+           02 CPF-AUX REDEFINES CPF.
+              03 CPF-P1              PIC 999.
+              03 CPF-P2              PIC 999.
+              03 CPF-P3              PIC 999.
+              03 CPF-P4              PIC 99.
+           02 SALDO                  PIC 9(07)V99.
+      * SEMPRE QUANDO TRABALHARMOS COM ARQUIVOS TEMOS QUE DECLARAR
+      *OS CAMPOS NESTA SECTION, NAO PODEMOS COLOCAR VALUE NESTA SECTION
+      *ESTES CAMPOS NAO SAO MANIPULADOS, SAO APENAS LAYOUT
+      *===============================================================
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77   STATUS-CLIENTES            PIC X(02)  VALUE SPACES.
+       77   SALDO-EDIT                 PIC Z.ZZZ.ZZ9,99 VALUE ZEROS.
+       77   CONTA-ACCEPT               PIC 9(05)  VALUE ZEROS.
+       01   CPF-EDIT.
+            02 CPF-1                      PIC 999 VALUE 0.
+            02 FILLER                     PIC X   VALUE '.'.
+            02 CPF-2                      PIC 999 VALUE 0.
+            02 FILLER                     PIC X   VALUE '.'.
+            02 CPF-3                      PIC 999 VALUE 0.
+            02 FILLER                     PIC X   VALUE '-'.
+            02 CPF-4                      PIC 99  VALUE 0.
+      *===============================================================
+       PROCEDURE DIVISION.
+       000-PRINCIPAL SECTION.
+       001-PRINCIPAL.
+           PERFORM 101-INICIAR.
+           PERFORM 201-PROCESSAR.
+           PERFORM 901-FINALIZAR.
+           STOP RUN.
+       099-FIM-PRINCIPAL.
+           EXIT.
+      *==============================================================
+      * MODULO INICIAR
+      *==============================================================
+       100-INICIAR SECTION.
+       101-INICIAR.
+           ACCEPT CONTA-ACCEPT FROM SYSIN.
+      * O COMANDO ACCEPT BUSCA A CHAVE DENTRO DO PROGRAMA COBOL
+           OPEN INPUT CLIENTES.
+           EVALUATE STATUS-CLIENTES
+              WHEN '00'
+                  CONTINUE
+              WHEN '35'
+                  DISPLAY 'ARQUIVO DO CLIENTES NAO ENCONTRADO '
+                  MOVE 8 TO RETURN-CODE
+                  STOP RUN
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-CLIENTES
+                  ' NO COMANDO OPEN DO CLIENTES'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       199-FIM-INICIAR.
+           EXIT.
+      *===============================================================
+      *   MODULO PROCESSAR
+      *===============================================================
+       200-PROCESSAR SECTION.
+       201-PROCESSAR.
+      * NO VSAM O MOVE SEMPRE EXISTE
+           MOVE CONTA-ACCEPT TO CONTA.
+           READ CLIENTES.
+           EVALUATE STATUS-CLIENTES
+              WHEN '00'
+                  MOVE SALDO TO SALDO-EDIT
+                  MOVE CPF-P1 TO CPF-1
+                  MOVE CPF-P2 TO CPF-2
+                  MOVE CPF-P3 TO CPF-3
+                  MOVE CPF-P4 TO CPF-4
+                  DISPLAY 'CONTA   ' CONTA
+                  DISPLAY 'AGENCIA ' AGENCIA
+                  DISPLAY 'NOME    ' NOME
+                  DISPLAY 'CPF     ' CPF-EDIT
+                  DISPLAY 'SALDO ' SALDO-EDIT
+              WHEN '23'
+                  DISPLAY 'CLIENTE ' CONTA ' NAO EXISTE '
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-CLIENTES
+                          ' NO COMANDO READ DO CLIENTES'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       299-FIM-PROCESSAR.
+           EXIT.
+      *===============================================================
+      * MODULO FINALIZAR
+      *===============================================================
+       900-FINALIZAR SECTION.
+       901-FINALIZAR.
+           CLOSE CLIENTES.

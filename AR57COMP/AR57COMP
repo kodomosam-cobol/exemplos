@@ -1,0 +1,44 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57COMP.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *PROGRAMA PARA EXIBICAO DAS OPERACOES ARITMETICAS              *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77 VAR1                     PIC 99V9    VALUE 0.
+       77 VAR2                     PIC 99V9    VALUE 0.
+       77 VAR3                     PIC 99V9    VALUE 0.
+       77 VAR4                     PIC 99V9    VALUE 0.
+       77 VAR1-EDIT                PIC Z9,9    VALUE ZEROS.
+       77 VAR2-EDIT                PIC Z9,9    VALUE ZEROS.
+       77 VAR3-EDIT                PIC Z9,9    VALUE ZEROS.
+       77 VAR4-EDIT                PIC Z9,9    VALUE ZEROS.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+      **************************************************************
+      *              EXEMPLO DE COMPUTER
+      ************************************************************
+           MOVE 2,7  TO VAR1.
+           MOVE 3,7  TO VAR2.
+           COMPUTE   VAR4 ROUNDED = (VAR1 + VAR2) / 2
+      ************************************************************
+      *    O COMANDO COMPUTE SERVE PARA TRABALHAR COM OPERACOES
+      * ARITMETICAS
+               ON SIZE ERROR
+                   DISPLAY 'OVERFLOW'
+               NOT ON SIZE ERROR
+                   MOVE VAR2 TO VAR2-EDIT
+                   MOVE VAR1 TO VAR1-EDIT
+                   MOVE VAR4 TO VAR4-EDIT
+                   DISPLAY 'A MEDIA DE ' VAR1-EDIT ' E '
+                   VAR2-EDIT ' EH ' VAR4-EDIT
+           END-COMPUTE.
+           STOP RUN.

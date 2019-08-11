@@ -1,0 +1,60 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57HELO.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *              PROGRAMA PARA EXIBICAO                          *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77  NOME                   PIC A(25) VALUE SPACES.
+      *
+       01  DATA-SIST.
+           02 ANO-SIST            PIC 99    VALUE 0.
+           02 MES-SIST            PIC 99    VALUE 0.
+           02 DIA-SIST            PIC 99    VALUE 0.
+       01  DATA-EDIT.
+           02 DIA-EDIT            PIC 99    VALUE 0.
+           02 FILLER              PIC X     VALUE '/'.
+           02 MES-EDIT            PIC 99    VALUE 0.
+           02 FILLER              PIC XXX   VALUE '/20'.
+           02 ANO-EDIT            PIC 99    VALUE 0.
+       01  TIME-SIST.
+           02 HORA-SIST           PIC 99    VALUE 0.
+           02 MINU-SIST           PIC 99    VALUE 0.
+           02 SEGU-SIST           PIC 99    VALUE 0.
+       01  TIME-EDIT.
+           02 HORA-EDIT           PIC 99    VALUE 0.
+           02 FILLER              PIC X     VALUE ':'.
+           02 MINU-EDIT           PIC 99    VALUE 0.
+           02 FILLER              PIC X     VALUE ':'.
+           02 SEGU-EDIT           PIC 99    VALUE 0.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+      *SINTAXE DO COMANDO ACCEPT
+      *ACCEPT [VARIAVEL] FROM + SYSIN|DATE|DAY|TIME
+      *BUSCANDO O NOME
+           ACCEPT NOME FROM SYSIN.
+           DISPLAY 'OLA ' NOME ', BEM VINDO AO CURSO DE COBOL.'.
+      **********************************************************
+      *BUSCANDO A DATA E MOVENDO PARA A VARIAVEL
+           ACCEPT DATA-SIST  FROM     DATE.
+           MOVE DIA-SIST      TO      DIA-EDIT.
+           MOVE MES-SIST      TO      MES-EDIT.
+           MOVE ANO-SIST      TO      ANO-EDIT.
+           ACCEPT TIME-SIST  FROM     TIME.
+           MOVE HORA-SIST   TO      HORA-EDIT.
+           MOVE MINU-SIST   TO      MINU-EDIT.
+           MOVE SEGU-SIST   TO      SEGU-EDIT.
+           DISPLAY 'DIA ' DATA-EDIT.
+           DISPLAY 'HORA ' TIME-EDIT.
+           DISPLAY 'XXXXXXXXXXXXXXXXXXXXXXXXX'.
+      **********************************************************
+      *O COMANDO ABAIXO PARA O PROGRAMA
+           STOP RUN.

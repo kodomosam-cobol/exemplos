@@ -1,0 +1,3 @@
+no cobol quando falamos tabela queremos dizer (vetor) é o mesmo conceito
+
+executar o programa AR57TAB2 porque o tab1 e so para mostrar a diferença

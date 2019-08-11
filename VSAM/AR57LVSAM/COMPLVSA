@@ -1,0 +1,5 @@
+//GPAR57CC JOB 'RODRI',CLASS=C,MSGCLASS=X,NOTIFY=GPAR57,REGION=0M       00011002
+//         JCLLIB ORDER=SYS1.GERAL.PROCLIB                              00021001
+//COBCOMP  EXEC DFHCOBLB,LIB1=GR.GPAR57,NOME='AR57LVSA',LIB2=GR.GERAL   00030006
+//LKED.SYSIN    DD   *                                                  00040000
+  NAME  AR57LVSA(R)                                                     00050006

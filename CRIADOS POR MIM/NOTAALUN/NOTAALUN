@@ -1,0 +1,109 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. NOTAALUN.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *PROGRAMA PARA CALCULAR A MEDIA DE DUAS NOTAS E INFORMA        *
+      * SE O ALUNO FOI APROVADO
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77 N1A                      PIC 99      VALUE 0.
+       77 N2A                      PIC 99      VALUE 0.
+       77 N1B                      PIC 99      VALUE 0.
+       77 N2B                      PIC 99      VALUE 0.
+       77 N1C                      PIC 99      VALUE 0.
+       77 N2C                      PIC 99      VALUE 0.
+       77 MEDIAA                   PIC 99      VALUE 0.
+       77 MEDIAB                   PIC 99      VALUE 0.
+       77 MEDIAC                   PIC 99      VALUE 0.
+       77 ALUNOA                   PIC X(07)   VALUE 'RODRIGO'.
+       77 ALUNOB                   PIC X(05)   VALUE 'PAULO'.
+       77 ALUNOC                   PIC X(07)   VALUE 'RICARDO'.
+       77 ESCOLA                   PIC X(04)   VALUE 'GPTI'.
+       77 CALC-A                   PIC 99      VALUE 0.
+       77 CALC-B                   PIC 99      VALUE 0.
+       77 CALC-C                   PIC 99      VALUE 0.
+
+       PROCEDURE DIVISION.
+       INICIO.
+       000-PRINCIPAL SECTION.
+       001-PRINCIPAL.
+           PERFORM 101-INICIAR.
+           PERFORM 201-PROCESSAR.
+           PERFORM 301-FINALIZAR.
+           STOP RUN.
+       099-FIM-PRINCIPAL.
+           EXIT.
+       100-INICIAR SECTION.
+       101-INICIAR.
+           MOVE 5,2  TO N1A.
+           MOVE 4,5  TO N2A.
+           MOVE 1,2  TO N1B.
+           MOVE 2,5  TO N2B.
+           MOVE 5,0  TO N1C.
+           MOVE 5,0  TO N2C.
+       199-FIM-INICIAR.
+           EXIT.
+       200-PROCESSAR SECTION.
+       201-PROCESSAR.
+           COMPUTE   CALC-A ROUNDED = (N1A * 4 + N2A * 6) / 10
+           END-COMPUTE.
+           COMPUTE   CALC-B ROUNDED = (N1B * 4 + N2B * 6) / 10
+           END-COMPUTE.
+           COMPUTE   CALC-A ROUNDED = (N1C * 4 + N2C * 6) / 10
+           END-COMPUTE.
+           MOVE CALC-A TO MEDIAA.
+           MOVE CALC-B TO MEDIAB.
+           MOVE CALC-C TO MEDIAC.
+       299-FIM-PROCESSAR.
+           EXIT.
+       300-FINALIZAR SECTION.
+       301-FINALIZAR.
+           IF  MEDIAA >= 5
+                  DISPLAY ' O ALUNO: ' ALUNOA ' ESTA APROVADO  '
+                  DISPLAY '----------------------------------- '
+                  DISPLAY 'OBTEVE A MEDIA: ' MEDIAA
+                  DISPLAY '----------------------------------- '
+           ELSE
+                  DISPLAY '----------------------------------- '
+                  DISPLAY ' O ALUNO: ' ALUNOA ' ESTA REPROVADO '
+                  DISPLAY '----------------------------------- '
+                  DISPLAY 'OBTEVE A MEDIA: ' MEDIAB
+                  DISPLAY '----------------------------------- '
+           END-IF.
+           IF  MEDIAB >= 5
+                  DISPLAY '----------------------------------- '
+                  DISPLAY ' O ALUNO: ' ALUNOB ' ESTA APROVADO  '
+                  DISPLAY '----------------------------------- '
+                  DISPLAY 'OBTEVE A MEDIA: ' MEDIAB
+                  DISPLAY '----------------------------------- '
+           ELSE
+                  DISPLAY '----------------------------------- '
+                  DISPLAY ' O ALUNO: ' ALUNOB ' ESTA REPROVADO '
+                  DISPLAY '----------------------------------- '
+                  DISPLAY 'OBTEVE A MEDIA: ' MEDIAB
+                  DISPLAY '----------------------------------- '
+           END-IF.
+           IF  MEDIAC >= 5
+                  DISPLAY '----------------------------------- '
+                  DISPLAY ' O ALUNO: ' ALUNOC ' ESTA APROVADO  '
+                  DISPLAY '----------------------------------- '
+                  DISPLAY 'OBTEVE A MEDIA: ' MEDIAC
+                  DISPLAY '----------------------------------- '
+           ELSE
+                  DISPLAY '----------------------------------- '
+                  DISPLAY ' O ALUNO: ' ALUNOC ' ESTA REPROVADO '
+                  DISPLAY '----------------------------------- '
+                  DISPLAY 'OBTEVE A MEDIA: ' MEDIAC
+                  DISPLAY '----------------------------------- '
+                  DISPLAY 'PROGRAMER: RODRIGO ' ESCOLA
+                  DISPLAY '----------------------------------- '
+           END-IF.
+       399-FIM-FINALIZAR.
+           EXIT.

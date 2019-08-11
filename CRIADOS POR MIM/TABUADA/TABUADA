@@ -1,0 +1,43 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. TABUADA.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *PROGRAMA PARA CALCULAR UMA TABUADA                            *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+      ****************************************************************
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77    CONT               PIC 99          VALUE 0.
+       77    RESULT             PIC 99          VALUE 0.
+       77    NUM                PIC 99          VALUE 0.
+       77    CONT-EDIT          PIC 99          VALUE 0.
+       77    RESU-EDIT          PIC 99          VALUE 0.
+       77    NUM-EDIT           PIC 99          VALUE 0.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+      **********************************************************
+      *            MODULO INICIO                               *
+      **********************************************************
+           ACCEPT NUM.
+           PERFORM CALCULO VARYING CONT FROM 1 BY 1
+              UNTIL CONT = 11.
+              DISPLAY ' ----------------------------------------- '.
+              DISPLAY ' PROGRAMER: RODRIGO SAMPAIO '.
+              DISPLAY ' ----------------------------------------- '.
+           STOP RUN.
+      *************************************************************
+      * MODULO DE CALCULO DA TABUADA
+      *************************************************************
+       CALCULO.
+           COMPUTE RESULT = NUM * CONT.
+               MOVE RESULT TO RESU-EDIT
+               MOVE NUM    TO NUM-EDIT
+               MOVE CONT   TO CONT-EDIT
+           DISPLAY ' ' NUM-EDIT ' X ' CONT-EDIT '  =  ' RESU-EDIT.      DIT.

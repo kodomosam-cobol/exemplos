@@ -1,0 +1,71 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57CPF2.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *  SUB-PROGRAMA PARA CALCULAR DIGITO DO CPF
+      *PROGRAMA PRINCIPAL AR57CPF1
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       77  SOMA                         PIC 9(03) VALUE 0.
+       77  RESULT                       PIC 9(02) VALUE 0.
+       77  RESTO                        PIC 9(02) VALUE 0.
+      **************************************************************
+      * DEFINICAO DE TABELA(VETOR) DE 11 ALGARISMOS
+       01  CPF-WORK.
+           02 ALGARISMO                 PIC 9(01) OCCURS 11 TIMES.
+       LINKAGE SECTION.
+      * AREA ESTERNA, VNDO DO OUTRO PROGRAMA
+      * NAO PODEMOS COLOCAR VALUE
+       01  AREA-COMUNICA.
+           02 NUMERO-CPF-LINK           PIC 9(09).
+           02 DIGITO-CPF-LINK           PIC 9(02).
+      **********************************************************
+       PROCEDURE DIVISION USING AREA-COMUNICA.
+       INICIO.
+           MOVE AREA-COMUNICA   TO CPF-WORK.
+      *    CALCULO DO PRIMEIRO DIGITO
+           COMPUTE SOMA = ALGARISMO(1) * 1 +
+                          ALGARISMO(2) * 2 +
+                          ALGARISMO(3) * 3 +
+                          ALGARISMO(4) * 4 +
+                          ALGARISMO(5) * 5 +
+                          ALGARISMO(6) * 6 +
+                          ALGARISMO(7) * 7 +
+                          ALGARISMO(8) * 8 +
+                          ALGARISMO(9) * 9.
+           DIVIDE SOMA BY 11 GIVING RESULT REMAINDER RESTO.
+           IF RESTO = 10
+              MOVE 0 TO ALGARISMO(10)
+           ELSE
+              MOVE RESTO TO ALGARISMO(10)
+           END-IF.
+      *    CALCULO DO SEGUNDO DIGITO
+           COMPUTE SOMA = ALGARISMO(1)  * 0 +
+                          ALGARISMO(2)  * 1 +
+                          ALGARISMO(3)  * 2 +
+                          ALGARISMO(4)  * 3 +
+                          ALGARISMO(5)  * 4 +
+                          ALGARISMO(6)  * 5 +
+                          ALGARISMO(7)  * 6 +
+                          ALGARISMO(8)  * 7 +
+                          ALGARISMO(9)  * 8 +
+                          ALGARISMO(10) * 9.
+           DIVIDE SOMA BY 11 GIVING RESULT REMAINDER RESTO.
+           IF RESTO = 10
+              MOVE 0     TO ALGARISMO(11)
+           ELSE
+              MOVE RESTO TO ALGARISMO(11)
+           END-IF.
+           MOVE CPF-WORK TO AREA-COMUNICA.
+      *************************************************************
+      * PODEMOS COLOCAR EXIT-PROGRAM OU  GOBACK
+      *************************************************************
+           GOBACK.
+

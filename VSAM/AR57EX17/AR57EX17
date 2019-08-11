@@ -1,0 +1,387 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57EX17.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      *---------------------------------------------------------------
+      *PROGRAMA PARA ATUALIZAR PRODUTOS (VSAM) USANDO O ARQUIVO
+      *SEQUENCIAL MOVIMENTO
+      *EXERCICIO 17 DO CADERNO DE EXERCICIOS COBOL
+      *---------------------------------------------------------------
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+      *===============================================================
+      *ESTA SESAO SERVE PARA DECLARAR ARQUIVOS
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT PRODUTOS ASSIGN TO PRODUTOS
+      * O (ASSIGN TO) NAO PODE PASSAR DE 8 CARACTERES
+      * E USADO NO JCL
+              ORGANIZATION IS INDEXED
+              ACCESS MODE DYNAMIC
+              RECORD KEY IS CODPROD-P
+              FILE STATUS IS STATUS-PRODUTOS.
+      *PODEMOS DECLARAR OUTRA CHAVE USANDO (ALTERNATE RECORD KEY)
+           SELECT MOVIMENTO ASSIGN TO MOVIMEN
+              FILE STATUS IS STATUS-MOVIMENTO.
+           SELECT RELATO ASSIGN TO RELATO.
+      *===============================================================
+      * DECLARACAO DE ARQUIVOS
+       DATA DIVISION.
+       FILE SECTION.
+       FD PRODUTOS.
+       01  REG-PRODUTOS.
+           02 CODPROD-P              PIC 9(06).
+           02 DESCRI-P               PIC X(35).
+           02 LOCAL-P                PIC X(06).
+           02 QTDEST-P               PIC 9(04).
+           02 QTDMIM-P               PIC 9(04).
+           02 QTDMAX-P               PIC 9(04).
+           02 PRECO-P                PIC 9(04)V99.
+      *----------------------------------------------------------
+      * O NOME MOVIMENTO VEM DO SELECT
+       FD MOVIMENTO.
+       01  REG-MOVIMENTO.
+           02 CODPROD-M              PIC 9(06).
+           02 DESCRI-M               PIC X(35).
+           02 LOCAL-M                PIC X(06).
+           02 QTDEST-M               PIC 9(04).
+           02 QTDMIM-M               PIC 9(04).
+           02 QTDMAX-M               PIC 9(04).
+           02 PRECO-M                PIC 9(04)V99.
+           02 TIPO-M                 PIC X(01).
+      * SEMPRE QUANDO TRABALHARMOS COM ARQUIVOS TEMOS QUE DECLARAR
+      *OS CAMPOS NESTA SECTION, NAO PODEMOS COLOCAR VALUE NESTA SECTION
+      *===============================================================
+      *RESERVANDO 90 CARACTERES
+       FD  RELATO.
+       01  REG-RELATO                PIC X(90).
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       01  CABEC1.
+           02 FILLER            PIC X(10) VALUE SPACES.
+           02 FILLER            PIC X(47) VALUE
+              'ATUALIZACAO DE CADASTROS DE PRODUTOS - MES BASE'.
+           02 MES-CABEC1        PIC X(09) VALUE SPACES.
+           02 FILLER            PIC X(01) VALUE '/'.
+           02 ANO-CABEC1        PIC 9(02) VALUE ZEROS.
+           02 FILLER            PIC X(08) VALUE '   PAG. '.
+           02 NUM-PAG           PIC 9(02) VALUE 0.
+       01  CABEC2.
+           02 FILLER            PIC X(03) VALUE SPACES.
+           02 FILLER            PIC X(18) VALUE 'IMAGEM DO REGISTRO'.
+           02 FILLER            PIC X(54) VALUE SPACES.
+           02 FILLER            PIC X(10) VALUE 'OCORRENCIA'.
+       01  DETALHE.
+           02 FILLER                    PIC X(03) VALUE SPACES.
+           02 IMAGEM-DET                PIC X(66) VALUE SPACES.
+           02 FILLER                    PIC X(03) VALUE SPACES.
+           02 OCORRENCIA-DET            PIC X(15) VALUE SPACES.
+       01  RODAPE-1.
+           02 FILLER                    PIC X(26) VALUE SPACES.
+           02 FILLER                    PIC X(34) VALUE
+              'ESTATISTICA FINAL DE PROCESSAMENTO'.
+       01  RODAPE-2.
+           02 FILLER                    PIC X(26) VALUE SPACES.
+           02 TITULO-RODAPE             PIC X(34) VALUE SPACES.
+           02 TOTAL-RODAPE              PIC 999   VALUE 0.
+       77  STATUS-PRODUTOS              PIC X(02)  VALUE SPACES.
+       77  STATUS-MOVIMENTO             PIC X(02)  VALUE SPACES.
+       77  TOT-ALTERADOS                PIC 999 VALUE 0.
+       77  TOT-INCLUIDOS                PIC 999 VALUE 0.
+       77  TOT-EXCLUIDOS                PIC 999 VALUE 0.
+       77  TOT-REJEITADOS               PIC 999 VALUE 0.
+       77  CONTALIN                     PIC 99  VALUE 0.
+       01  DATA-SIST.
+           02 ANO-SIST            PIC 99    VALUE 0.
+           02 MES-SIST            PIC 99    VALUE 0.
+           02 DIA-SIST            PIC 99    VALUE 0.
+      *===============================================================
+       PROCEDURE DIVISION.
+       000-PRINCIPAL SECTION.
+       001-PRINCIPAL.
+           PERFORM 101-INICIAR.
+           PERFORM 201-PROCESSAR UNTIL STATUS-MOVIMENTO = '10'.
+      *    UNTIL EXECUTA ATÉ QUE ESTATUS SEJA = 10
+           PERFORM 901-FINALIZAR.
+           STOP RUN.
+       099-FIM-PRINCIPAL.
+           EXIT.
+      *==============================================================
+      * MODULO INICIAR
+      *==============================================================
+       100-INICIAR SECTION.
+       101-INICIAR.
+           OPEN I-O PRODUTOS.
+           EVALUATE STATUS-PRODUTOS
+              WHEN '00'
+                  CONTINUE
+              WHEN '35'
+                  DISPLAY 'ARQUIVO DO PRODUTOS NAO ENCONTRADO '
+                  MOVE 8 TO RETURN-CODE
+                  STOP RUN
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-PRODUTOS
+                  ' NO COMANDO OPEN DO PRODUTOS'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+           OPEN INPUT MOVIMENTO.
+           EVALUATE STATUS-MOVIMENTO
+              WHEN '00'
+                  CONTINUE
+              WHEN '35'
+                  DISPLAY 'ARQUIVO DO MOVIMENTO NAO ENCONTRADO '
+                  MOVE 8 TO RETURN-CODE
+                  STOP RUN
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-MOVIMENTO
+                  ' NO COMANDO OPEN DO MOVIMENTO'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+           OPEN OUTPUT RELATO.
+           ACCEPT DATA-SIST  FROM     DATE.
+           MOVE ANO-SIST     TO  ANO-CABEC1.
+           EVALUATE MES-SIST
+               WHEN 1
+                   MOVE 'JANEIRO'     TO MES-CABEC1
+               WHEN 2
+                   MOVE 'FEVEREIRO'   TO MES-CABEC1
+               WHEN 3
+                   MOVE 'MARCO'       TO MES-CABEC1
+               WHEN 4
+                   MOVE 'ABRIL'       TO MES-CABEC1
+               WHEN 5
+                   MOVE 'MAIO'        TO MES-CABEC1
+               WHEN 6
+                   MOVE 'JUNHO'       TO MES-CABEC1
+               WHEN 7
+                   MOVE 'JULHO'       TO MES-CABEC1
+               WHEN 8
+                   MOVE 'AGOSTO'      TO MES-CABEC1
+               WHEN 9
+                   MOVE 'SETEMBRO'    TO MES-CABEC1
+               WHEN 10
+                   MOVE 'OUTUBRO'     TO MES-CABEC1
+               WHEN 11
+                   MOVE 'NOVEMBRO'    TO MES-CABEC1
+               WHEN 12
+                   MOVE 'DEZEMBRO'    TO MES-CABEC1
+           END-EVALUATE.
+           PERFORM 301-LER-MOVIMENTO.
+       199-FIM-INICIAR.
+           EXIT.
+      *---------------------------------------------------------------
+      *   MODULO PROCESSAR
+      *---------------------------------------------------------------
+       200-PROCESSAR SECTION.
+       201-PROCESSAR.
+           EVALUATE TIPO-M
+               WHEN 'A'
+                   PERFORM 501-ALTERAR
+               WHEN 'I'
+                   PERFORM 601-INCLUIR
+               WHEN 'E'
+                   PERFORM 701-EXCLUIR
+               WHEN OTHER
+                   MOVE REG-MOVIMENTO   TO IMAGEM-DET
+                   MOVE 'TIPO INVALIDO' TO OCORRENCIA-DET
+                   PERFORM 801-IMPRIMIR
+           END-EVALUATE.
+           PERFORM 301-LER-MOVIMENTO.
+       299-FIM-PROCESSAR.
+           EXIT.
+      *===============================================================
+      * MODULO LER-MOVIMENTO                                         *
+      *===============================================================
+       300-LER-MOVIMENTO SECTION.
+       301-LER-MOVIMENTO.
+           READ MOVIMENTO.
+           EVALUATE STATUS-MOVIMENTO
+              WHEN '00'
+                  CONTINUE
+              WHEN '10'
+                  CONTINUE
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-MOVIMENTO
+                  ' NO COMANDO READ DO MOVIMENTO'
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       399-FIM-LER-MOVIMENTO.
+           EXIT.
+      *===============================================================
+      * MODULO LER-PRODUTOS                                          *
+      *===============================================================
+       400-LER-PRODUTOS SECTION.
+       401-LER-PRODUTOS.
+           MOVE CODPROD-M TO CODPROD-P.
+           READ PRODUTOS.
+           EVALUATE STATUS-PRODUTOS
+              WHEN '00'
+                  CONTINUE
+              WHEN '23'
+                  CONTINUE
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-PRODUTOS
+                          'NO COMANDO READ DO PRODUTOS '
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       499-FIM-LER-PRODUTOS.
+           EXIT.
+      *===============================================================
+      * MODULO ALTERAR
+      *===============================================================
+       500-ALTERAR SECTION.
+       501-ALTERAR.
+           PERFORM 401-LER-PRODUTOS.
+           IF STATUS-PRODUTOS = '23'
+               MOVE REG-MOVIMENTO        TO IMAGEM-DET
+               MOVE 'NAO CADASTRADO'     TO OCORRENCIA-DET
+               PERFORM 801-IMPRIMIR
+               ADD 1                     TO TOT-REJEITADOS
+           ELSE
+               MOVE REG-PRODUTOS         TO IMAGEM-DET
+               MOVE 'ANTES DA ALTERACAO' TO OCORRENCIA-DET
+               PERFORM 801-IMPRIMIR
+               PERFORM 502-ALTERAR
+               MOVE REG-PRODUTOS         TO IMAGEM-DET
+               MOVE 'APOS ALTERACAO'     TO OCORRENCIA-DET
+               PERFORM 801-IMPRIMIR
+               ADD 1                     TO TOT-ALTERADOS
+           END-IF.
+       502-ALTERAR.
+           IF DESCRI-M NOT = SPACES
+               MOVE DESCRI-M TO DESCRI-P
+           END-IF.
+           IF LOCAL-M  NOT = SPACES
+               MOVE LOCAL-M  TO LOCAL-P
+           END-IF.
+      *O IF E DIFERENTE QUANDO O CAMPO E NUMERICO
+           IF QTDEST-M IS NUMERIC
+               MOVE QTDEST-M TO QTDMIM-P
+           END-IF.
+           IF QTDMIM-M IS NUMERIC
+               MOVE QTDMIM-M TO QTDMIM-P
+           END-IF.
+           IF QTDMAX-M IS NUMERIC
+               MOVE QTDMAX-M TO QTDMAX-P
+           END-IF.
+           IF PRECO-M  IS NUMERIC
+               MOVE PRECO-M  TO PRECO-P
+           END-IF.
+           REWRITE REG-PRODUTOS.
+           IF STATUS-PRODUTOS NOT = '00'
+                  DISPLAY 'ERRO ' STATUS-PRODUTOS
+                          'NO COMANDO REWRITE DO PRODUTOS '
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-IF.
+       599-FIM-ALTERAR.
+           EXIT.
+      *===============================================================
+      * MODULO INCLUIR
+      *===============================================================
+       600-INCLUIR SECTION.
+       601-INCLUIR.
+           MOVE REG-MOVIMENTO      TO REG-PRODUTOS.
+      *===============================================================
+      * EM ARQUIVOS VSAM O COMANDO WHITE CRIA O REGISTRO
+           WRITE REG-PRODUTOS.
+           EVALUATE STATUS-PRODUTOS
+              WHEN '00'
+                  MOVE  REG-MOVIMENTO    TO IMAGEM-DET
+                  MOVE  'INCL. EFETUADA' TO OCORRENCIA-DET
+                  PERFORM 801-IMPRIMIR
+                  ADD  1  TO  TOT-INCLUIDOS
+              WHEN '22'
+                  MOVE  REG-MOVIMENTO    TO IMAGEM-DET
+                  MOVE  'JA CADASTRADO'  TO OCORRENCIA-DET
+                  PERFORM 801-IMPRIMIR
+                  ADD 1 TO TOT-REJEITADOS
+              WHEN OTHER
+                  DISPLAY 'ERRO ' STATUS-PRODUTOS
+                          'NO COMANDO WRITE DO PRODUTOS '
+                  MOVE 12 TO RETURN-CODE
+                  STOP RUN
+           END-EVALUATE.
+       699-FIM-INCLUIR.
+           EXIT.
+      *===============================================================
+      * MODULO EXCLUIR
+      *===============================================================
+       700-EXCLUIR SECTION.
+       701-EXCLUIR.
+           PERFORM 401-LER-PRODUTOS.
+           IF STATUS-PRODUTOS = '00'
+               PERFORM 702-EXCLUIR
+           ELSE
+               MOVE REG-MOVIMENTO TO IMAGEM-DET
+               MOVE 'NAO CADASTRADO' TO OCORRENCIA-DET
+               PERFORM 801-IMPRIMIR
+               ADD 1 TO TOT-REJEITADOS
+           END-IF.
+       702-EXCLUIR.
+           DELETE PRODUTOS.
+           IF STATUS-PRODUTOS = '00'
+               MOVE REG-PRODUTOS TO IMAGEM-DET
+               MOVE 'EXCL. EFETUADA' TO OCORRENCIA-DET
+               PERFORM 801-IMPRIMIR
+               ADD 1 TO TOT-EXCLUIDOS
+           ELSE
+                DISPLAY 'ERRO ' STATUS-PRODUTOS
+                        'NO COMANDO DELETE DO PRODUTOS '
+                MOVE 12 TO RETURN-CODE
+                STOP RUN
+           END-IF.
+       799-FIM-EXCLUIR.
+           EXIT.
+      *===============================================================
+      * MODULO IMPRIMIR
+      *===============================================================
+       800-IMPRIMIR  SECTION.
+       801-IMPRIMIR.
+           IF CONTALIN = 0 OR CONTALIN >= 50
+               PERFORM 802-CABECALHO
+           END-IF.
+           WRITE REG-RELATO FROM DETALHE.
+           ADD 1 TO CONTALIN.
+       802-CABECALHO.
+           ADD 1 TO NUM-PAG.
+           WRITE REG-RELATO FROM CABEC1 AFTER PAGE.
+           WRITE REG-RELATO FROM CABEC2 AFTER 3 LINES.
+           MOVE SPACES TO REG-RELATO.
+           WRITE REG-RELATO.
+           MOVE 0 TO CONTALIN.
+       899-FIM-IMPRESSAO.
+           EXIT.
+      *===============================================================
+      * MODULO FINALIZAR
+      *===============================================================
+       900-FINALIZAR SECTION.
+       901-FINALIZAR.
+           CLOSE PRODUTOS MOVIMENTO.
+           ADD 1 TO NUM-PAG.
+           WRITE REG-RELATO FROM CABEC1  AFTER PAGE.
+           WRITE REG-RELATO FROM RODAPE-1 AFTER 2 LINES.
+
+           MOVE 'TOTAL DE RESGISTROS ALTERADOS.....' TO TITULO-RODAPE.
+           MOVE TOT-ALTERADOS   TO TOTAL-RODAPE.
+           WRITE REG-RELATO FROM RODAPE-2 AFTER 2 LINES.
+
+           MOVE 'TOTAL DE RESGISTROS INCLUIDOS.....' TO TITULO-RODAPE.
+           MOVE TOT-INCLUIDOS   TO TOTAL-RODAPE.
+           WRITE REG-RELATO FROM RODAPE-2.
+
+           MOVE 'TOTAL DE RESGISTROS EXCLUIDOS.....' TO TITULO-RODAPE.
+           MOVE TOT-EXCLUIDOS   TO TOTAL-RODAPE.
+           WRITE REG-RELATO FROM RODAPE-2.
+
+           MOVE 'TOTAL DE RESGISTROS REJEITADOS....' TO TITULO-RODAPE.
+           MOVE TOT-REJEITADOS  TO TOTAL-RODAPE.
+           WRITE REG-RELATO FROM RODAPE-2.
+
+           CLOSE RELATO.

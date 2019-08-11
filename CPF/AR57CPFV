@@ -1,0 +1,44 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AR57CPFV.
+       AUTHOR.   RODRIGO MOREIRA SAMPAIO.
+      ****************************************************************
+      *    PROGRAMA PARA FAZER ACCEPT DE VARIOS CPF E EXECUTAR
+      *CALL PARA PROGRAMA AR57CPF2 PARA CALCULAR O DIGITO DO CPF *
+      ****************************************************************
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT IS COMMA.
+      *   O COMANDO ACIMA REFERESE AO SISTEMA DECIMAL
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      * DECLARACAO DE VARIAVEIS
+       01  CPF-ACCEPT.
+           02 NUMERO-CPF-ACCEPT         PIC 9(09) VALUE 0.
+           02 DIGITO-CPF-ACCEPT         PIC 9(02) VALUE 0.
+       01  AREA-COMUNICA.
+           02 NUMERO-CPF-COM            PIC 9(09) VALUE 0.
+           02 DIGITO-CPF-COM            PIC 9(02) VALUE 0.
+       77  NOME-PROG                    PIC X(08) VALUE SPACES.
+      **********************************************************
+       PROCEDURE DIVISION.
+       INICIO.
+      *          SINTAXE DO COMANDO ACCEPT
+      *ACCEPT [VARIAVEL] FROM + SYSIN|DATE|DAY|TIME
+           ACCEPT CPF-ACCEPT FROM SYSIN.
+           PERFORM LEITURA UNTIL  CPF-ACCEPT  =  '00000000000'.
+           STOP RUN.
+       LEITURA.
+           MOVE 'AR57CPF2'        TO NOME-PROG.
+           MOVE NUMERO-CPF-ACCEPT TO NUMERO-CPF-COM.
+      **********************************************************
+      * CALL CHAMADA DINAMICA
+      ***********************************************************
+           CALL NOME-PROG USING AREA-COMUNICA.
+           IF DIGITO-CPF-COM = DIGITO-CPF-ACCEPT
+              DISPLAY 'CPF ' CPF-ACCEPT ' ESTA CORRETO '
+           ELSE
+              DISPLAY 'CPF ' CPF-ACCEPT ' ESTA INCORRETO '
+              DISPLAY ' O DIGITO CALCULADO = ' DIGITO-CPF-COM
+           END-IF.
+           ACCEPT CPF-ACCEPT FROM SYSIN.
